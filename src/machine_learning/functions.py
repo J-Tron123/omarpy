@@ -5,9 +5,16 @@ from sklearn.tree import DecisionTreeRegressor
 from sklearn.ensemble import RandomForestRegressor
 from xgboost import XGBRegressor
 import tensorflow as tf
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
 
+import pickle
 import sys
 import os
+
+import pandas as pd
+import numpy as np
+
 import urllib.request
 
 from PIL import Image
@@ -45,7 +52,7 @@ def remover_vello(imagen: np.array):
     except:
         print(f'El formato {imagen} no es el adecuado. Revisa la descripción de la función.')
 
-def mask_fondo(imagen):
+def mask_fondo(imagen: np.array):
     '''
     Función para eliminar el fondo de la imagen.
 
@@ -503,3 +510,151 @@ def omar():
     urllib.request.urlretrieve("https://media-exp1.licdn.com/dms/image/C4E03AQH9NsUvxFQggA/profile-displayphoto-shrink_800_800/0/1575987701586?e=1656547200&v=beta&t=DM8kWl83h9U6nsRzt3_jqE3b13JjzRljAE6CWVkSNCk", "omar.png")     
     img = Image.open("omar.png")
     img.show()
+
+
+
+
+def scores(modelo, X_test, y_test, prediction):
+    """Función para generar un dataframe con los resultados obtenidos.
+    Hay que tener un modelo entrenado y el ".predict" hecho.
+    Argumentos:
+        modelo Se trata del nombre del modelo entrenado
+        X_test porción de los datos divididos (variables independientes del modelo) para realizar el test
+        y_test (np.array) porción de los datos divididos (variable target, a predecir o dependiente) para realizar el test
+        prediction (np.array) predicciones calculadas con el modelo entrenado
+        
+    Retornos:
+        DataFrame: DataFrame con los resultados de las métricas MAE, MSE, RMSE y SCORE.
+    """
+    resultados = {'LRegression': [
+                    mean_absolute_error(y_test, prediction),
+                    mean_squared_error(y_test, prediction),
+                    np.sqrt(mean_squared_error(y_test, prediction)),
+                    modelo.score(X_test, y_test) 
+                    ]}
+
+    resultados = pd.DataFrame(resultados, index=['MAE','MSE','RMSE', 'Score'])
+    return resultados
+
+
+
+def similarity_index(df_col=np.array, cons=float, exp=0.8):
+    '''Función que genera un valor de similitud estadístico a partir del indice de similitud de
+    Bray_Curtis.
+    
+    Argumentos:
+        df_col (np.array): Columna a aplicar la funcion (Columna de pandas).
+        cons (float): Valor constante de elemento cuya similitud versus la columna queremos conocer.
+        exp (float): Exponente pesado de cada propedad entre número de propiedades, valores entre 0 y 1 (default = 0.8).
+
+    Retornos:
+        pandas.Series: Valor de similitud estadístico.
+    '''
+    sim = df_col.apply(lambda x: (1 - abs((x - cons)/(x + cons)))**exp)
+    return sim
+
+
+
+def step_axis(init_val=float, num_vals=float, steps=float):
+    '''Función que generá un array de elementos separados por un valor constante que servirían como eje de gráfico.
+    
+    Argumentos:
+        init_val (float): Valor inicial, donde comenzará el eje.
+        num_vals (float): Número de valores que tendrá el array.
+        steps (float): Cada cuanto se obtiene valor.
+        
+    Retornos:
+        np.array: array de ejes
+    '''
+
+    axis = init_val + np.arange(num_vals)*steps
+    return axis
+
+
+
+def percentil(data, nivel):
+    """Función para saber los percentiles del dataframe
+
+    Argumentos:
+        data (pandas.DataFrame) Dataframe.
+        nivel (int o float) Nivel del percentil que quieres. Valores entre 0 a 100
+
+    Retornos:
+        list: Los limites superiores e inferiores
+
+    """
+    # Límites superior e inferior por percentiles
+    superior = np.percentile(data, 100 - nivel)
+    inferior = np.percentile(data, nivel)
+    # Devuelve los límites superior e inferior
+    return [inferior, superior]
+
+
+def metodo_iqr(data):
+    """Función para saber los limites con el rango intercuantilico
+
+    Argumentos:
+        data: Dataframe.
+
+    Retornos:
+        list: Los limites superiores e inferiores
+
+    """
+    # Cualcular el IQR (Rango intercuantilico)
+    perc_75 = np.percentile(data, 75)
+    perc_25 = np.percentile(data, 25)
+    rango_iqr = perc_75 - perc_25
+    # Obtención del límite inferior y superior
+    iqr_superior = perc_75 + 1.5 * rango_iqr
+    iqr_inferior = perc_25 - 1.5 * rango_iqr
+    # Devuelve los límites superior e inferior
+    return [iqr_inferior, iqr_superior]
+
+def metodo_std(data):
+    """Función para saber los limites con la desviacion estandar
+
+    Argumentos:
+        data: Dataframe.
+
+    Retornos:
+        list: Los limites superiores e inferiores
+
+    """
+    # Creación de tres desviaciones estándar fuera de los límites
+    std = np.std(data)
+    superior_3std = np.mean(data) + 3 * std
+    inferior_3std = np.mean(data) - 3 * std
+    # Devuelve los límites superior e inferior
+    return [inferior_3std, superior_3std]
+
+
+
+
+def predecir(x, model):
+    '''Función para importar un modelo de ML y realizar una predicción.
+    Argumentos:
+        x (pandas.DataFrame | np.array) Datos para realizar la predicción.
+        modelo: modelo que se quiere importar
+    Retornos:
+        str: Predicción redondeada
+    '''
+    with open(model) as archivo_entrada:
+        model_1 = pickle.load(archivo_entrada)
+    model_1
+    prediction = model_1.predict(x)
+    return str(prediction[0].round(2))
+
+
+
+def DF_Feature_importance(modelo, X):
+    '''Función para obtener un data frame con las feature importance de un determinado modelo.
+    Argumentos:
+        modelo: Model del cual se quiere obtener la visualización de las feature importance
+        X: (pandas.DataFrame) variable previamente creada que englobe todas las features del modelo (a excepción de la feature a predecir).
+    Retornos:
+        pandas.DataFrame: DataFrame con las feature importance del modelo.
+    '''
+    features_importances_model= pd.DataFrame(modelo.feature_importances_.round(3),
+                          X.columns, 
+                          columns = ["Feature importance"]).sort_values("Feature importance", ascending=False)
+    features_importances_model
