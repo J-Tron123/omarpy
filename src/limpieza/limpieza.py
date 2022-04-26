@@ -55,3 +55,12 @@ def inf_as_nan(df=pd.DataFrame):
     """
 
     df.replace([np.inf, -np.inf], np.nan, inplace=True)
+
+
+def remove_units (DataFrame, columns, units):
+    """Eliminar algunas extensiones, por ejemplo unidades de medida;
+    se puede incluir cuantas columnas sea necesario;
+    La variable "units" sería, por ejemplo, "Kg", "mol/L" """
+    for col in columns:
+        DataFrame[col] = DataFrame[col].str.strip(units)
+ 
