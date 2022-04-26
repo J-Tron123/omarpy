@@ -1,3 +1,4 @@
+from sklearn.preprocessing import StandardScaler, MinMaxScaler, MaxAbsScaler, RobustScaler
 import cv2
 import os
 import numpy as np
@@ -45,3 +46,28 @@ def mask_fondo(imagen):
     mask_inv = cv2.bitwise_not(mask) 
     new_img = cv2.bitwise_and(imagen,imagen,mask = mask_inv)
     return new_img
+
+def scaler(scaler: str, data: np.array):
+        """
+        Scales the data.
+
+        Args:
+            scaler: A scaler to choose from sklearn library. StandardScaler, MinMaxScaler, MaxAbsScaler, RobustScaler
+            data: Array like data to be scaled.
+        
+        Returns:
+            The data scaled.
+        """
+        try:
+            if scaler=='StandardScaler':
+                return StandardScaler().fit_transform(data)
+            elif scaler=='MinMaxScaler':
+                return MinMaxScaler().fit_transform(data)
+            elif scaler=='MaxAbsScaler':
+                return MaxAbsScaler().fit_transform(data)
+            elif scaler=='RobustScaler':
+                return RobustScaler().fit_transform(data)
+            else:
+        
+        except ValueError:
+            print('Choose one of the scalers listed.')
