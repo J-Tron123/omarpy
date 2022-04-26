@@ -1,7 +1,17 @@
 from sklearn.preprocessing import StandardScaler, MinMaxScaler, MaxAbsScaler, RobustScaler
-import cv2
+from sklearn.metrics import mean_absolute_error, mean_absolute_percentage_error, mean_squared_error, r2_score, confusion_matrix, classification_report
+from sklearn.decomposition import PCA
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.ensemble import RandomForestRegressor
+from xgboost import XGBRegressor
+
+import sys
 import os
+
+import cv2
 import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 def remover_vello(imagen):
     '''
@@ -47,23 +57,9 @@ def mask_fondo(imagen):
     new_img = cv2.bitwise_and(imagen,imagen,mask = mask_inv)
     return new_img
 
-<<<<<<< HEAD
-
-# Importacion de librerias usadas
-import sys
-
-from sklearn.decomposition import PCA
-from sklearn.preprocessing import StandardScaler
-from sklearn.tree import DecisionTreeRegressor
-
-from sklearn.metrics import mean_absolute_error, mean_absolute_percentage_error, mean_squared_error, r2_score
-
-# list_maxComponents = [ 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17]
-# list_maxDepth = [ 2, 3, 5, 10, 20, 30, 40]
-# #list_maxFeatures = [ 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17]
-# list_maxFeatures = [ (1/17), (2/17), (3/17), (4/17), (5/17), (6/17), (7/17), (8/17), (9/17), (10/17), (11/17), (12/17), (13/17), (14/17), (15/17), (16/17), (17/17)]
-
-'''
+def Mejor_PCA_DecissionTree_Regression(X_train, X_test, y_train, y_test, metric, 
+                                        list_maxComponents, list_maxDepth, list_maxFeatures):
+    '''
     FUNCION: Mejor_PCA_DecissionTree_Regression
     FECHA: 25-04-2021
     VERSION: v0
@@ -96,16 +92,11 @@ from sklearn.metrics import mean_absolute_error, mean_absolute_percentage_error,
         n_components (int) el parametro optimo n_components del PCA
         max_depth (int): lista con el max_depth del DecisionTreeRegressor
         maxFeatures (float): lista con el maxFeatures del DecisionTreeRegressor
-
-'''
-def Mejor_PCA_DecissionTree_Regression(X_train, X_test, y_train, y_test, metric, 
-                                        list_maxComponents, list_maxDepth, list_maxFeatures):
-
+    '''
     # Escala los datos de train y test
     ss = StandardScaler()
     X_train_scaled = ss.fit_transform(X_train)
     X_test_scaled = ss.transform(X_test)
-
     
     n = 0 # Para indicar si es la primera vez
     for componentsi in list_maxComponents:
@@ -159,20 +150,9 @@ def Mejor_PCA_DecissionTree_Regression(X_train, X_test, y_train, y_test, metric,
             n +=1
     return y_pred, metric_Best, max_components_Best, max_depth_Best, max_features_Best
 
-# Importacion de librerias usadas
-import sys
-
-from sklearn.decomposition import PCA
-from sklearn.preprocessing import StandardScaler
-from sklearn.ensemble import RandomForestRegressor
-
-from sklearn.metrics import mean_absolute_error, mean_absolute_percentage_error, mean_squared_error, r2_score
-
-# list_maxComponents = [ 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17]
-# list_n_estimators = [10, 25, 50, 100, 200, 300, 500, 800, 1000]
-# list_max_leaf_nodes = [5, 10, 15, 20, 25]
-
-'''
+def Mejor_PCA_RandomForest_Regression(X_train, X_test, y_train, y_test, metric, 
+                                    list_maxComponents, list_n_estimators, list_max_leaf_nodes):
+    '''
     FUNCION: Mejor_PCA_RandomForest_Regression
     FECHA: 25-04-2021
     VERSION: v0
@@ -205,9 +185,7 @@ from sklearn.metrics import mean_absolute_error, mean_absolute_percentage_error,
         n_estimators (int): el parametro optimo n_estimators del RandomForestRegressor
         max_leaf_nodes (int): el parametro optimo max_leaf_nodes del RandomForestRegressor
 
-'''
-def Mejor_PCA_RandomForest_Regression(X_train, X_test, y_train, y_test, metric, 
-                                    list_maxComponents, list_n_estimators, list_max_leaf_nodes):
+    '''
     # Escala los datos de train y test
     ss = StandardScaler()
     X_train_scaled = ss.fit_transform(X_train)
@@ -265,21 +243,9 @@ def Mejor_PCA_RandomForest_Regression(X_train, X_test, y_train, y_test, metric,
             n +=1
     return y_pred, metric_Best, max_components_Best, n_estimators_Best, max_leaf_nodes_Best
 
-# Importacion de librerias usadas
-import sys
-
-from sklearn.decomposition import PCA
-from sklearn.preprocessing import StandardScaler
-from xgboost import XGBRegressor
-
-from sklearn.metrics import mean_absolute_error, mean_absolute_percentage_error, mean_squared_error, r2_score
-
-# list_maxComponents = [ 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17]
-# list_n_estimators = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
-# list_max_depth = [5, 10, 15, 20, 25]
-# list_learning_rate = [0.01, 0.1, 0.5, 0.75, 1, 1.25, 1.5]
-
-'''
+def Mejor_PCA_XGB_Regression(X_train, X_test, y_train, y_test, metric, 
+                            list_maxComponents, list_n_estimators, list_max_depth, list_learning_rate):
+    '''
     FUNCION: Mejor_PCA_XGB_Regression
     FECHA: 25-04-2021
     VERSION: v0
@@ -314,10 +280,7 @@ from sklearn.metrics import mean_absolute_error, mean_absolute_percentage_error,
         n_estimators (int): el parametro optimo n_estimators del XGBRegressor
         max_depth (int): lista con el max_depth del XGBRegressor
         learning_rate (float): lista con el learning_rate del XGBRegressor
-
-'''
-def Mejor_PCA_XGB_Regression(X_train, X_test, y_train, y_test, metric, 
-                            list_maxComponents, list_n_estimators, list_max_depth, list_learning_rate):
+    '''
     # Escala los datos de train y test
     ss = StandardScaler()
     X_train_scaled = ss.fit_transform(X_train)
@@ -378,7 +341,7 @@ def Mejor_PCA_XGB_Regression(X_train, X_test, y_train, y_test, metric,
                                 max_components_Best = componentsi
             n +=1
     return y_pred, metric_Best, max_components_Best, n_estimators_Best, max_depth_Best, learning_rate_Best
-=======
+
 def scaler(scaler: str, data: np.array):
     """
     Scales the data.
@@ -458,10 +421,6 @@ def class_results(y_test, pred_y):
         Reporte sobre los resultados obtenidos.
         Matriz de confusión mostrada con un 'heatmap' de seaborn.
     '''
-    import matplotlib.pyplot as plt
-    import seaborn as sns
-    from sklearn.metrics import confusion_matrix, classification_report
-    
     conf_matrix = confusion_matrix(y_test, pred_y)
     plt.figure(figsize=(9,6))
     sns.heatmap(conf_matrix, annot=True)
@@ -514,4 +473,3 @@ def precision_recall_AUC(y_train, y_test):
     auc = auc(recall, precision)
 
     return auc
->>>>>>> b11f85c06f148412bc3fda9f0da28b332ddcb597
