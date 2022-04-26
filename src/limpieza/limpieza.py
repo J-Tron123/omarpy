@@ -3,6 +3,8 @@ import cv2
 import numpy as np
 import pandas as pd
 
+
+
 def num_describe(data_in):
     """returns a better vesion of describe
 
@@ -89,7 +91,7 @@ def mice_impute_nans(df):
         dataframe = dataframe without missing values''' 
 
     cols = df.columns
-    imputed_df =MICE( min_value= 0).fit_transform(df.values)
+    imputed_df = MICE( min_value= 0).fit_transform(df.values)
     imputed_df = pd.DataFrame(imputed_df)
     imputed_df.set_index(df.index, inplace=True)
     imputed_df.columns= cols
@@ -104,3 +106,71 @@ def remove_units (DataFrame, columns, units):
     for col in columns:
         DataFrame[col] = DataFrame[col].str.strip(units)
  
+
+
+def convertidor_español(Dataframe, column_name):
+    """ Conversión de números en formato string a float cuando estos tienen la puntuación 
+    no anglosajona.
+    Parámetros:
+        - Dataframe: dataframe
+        - Column_name: str"""
+
+    Dataframe[column_name] = Dataframe[column_name].str.replace(".","")
+    Dataframe[column_name] = Dataframe[column_name].str.replace(",",".").astype(float)
+
+    return Dataframe
+
+
+def convertidor_ingles(Dataframe, column_name):
+    """ Conversión de números en formato string a float cuando estos tienen la puntuación 
+    anglosajona.
+    Parámetros:
+        - Dataframe: dataframe
+        - Column_name: str"""
+
+    Dataframe[column_name] = Dataframe[column_name].str.replace(",","").astype(float)
+    return Dataframe
+
+def normalize(palabra):
+    """ Normalización de la palabras quitando símbolos de acentuación
+
+    Parámetros:
+        - palabra: str"""
+
+    replacements = (
+        ("á", "a"),
+        ("é", "e"),
+        ("í", "i"),
+        ("ó", "o"),
+        ("ú", "u"),
+    )
+    for a, b in replacements:
+        palabra = palabra.replace(a, b).replace(a.upper(), b.upper())
+    return palabra
+
+
+
+
+def crear_rentabilidades(Dataframe,Column_precio, nombre_nueva_columna, n): 
+
+    """ Esta función se emplea para calcular la rentabilidad de un precio n períodos atras.
+    Se crea una nueva columna.
+
+    Parametros: 
+        Dataframe: Df
+        Column_precio: str
+        Nombre_columna: Str
+        n: int.  """
+
+    lista_precios_n_periodos_atras = []
+
+    for x,i in enumerate (Dataframe[Column_precio]):
+        if x + n >= len(Dataframe[Column_precio]):
+            lista_precios_n_periodos_atras.append(np.nan)
+        else: 
+            lista_precios_n_periodos_atras.append(Dataframe[Column_precio][x+1])
+    Dataframe['PRECIO ANTERIOR']=lista_precios_n_periodos_atras
+    Dataframe[nombre_nueva_columna]=(Dataframe[Column_precio]-Dataframe['PRECIO ANTERIOR'])/Dataframe['PRECIO ANTERIOR']
+
+
+    return Dataframe
