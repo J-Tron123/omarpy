@@ -3,12 +3,11 @@ from sklearn.metrics import mean_absolute_error, mean_absolute_percentage_error,
 from sklearn.decomposition import PCA
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.ensemble import RandomForestRegressor
+from fancyimpute import IterativeImputer as MICE
 from xgboost import XGBRegressor
 import tensorflow as tf
-
 import sys
 import os
-
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
