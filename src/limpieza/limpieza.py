@@ -1,3 +1,6 @@
+import numpy as np
+import pandas as pd
+
 def num_describe(data_in):
     """returns a better vesion of describe
 
@@ -40,3 +43,15 @@ def circ_distance(value_1, value_2, low, high):
     angle = angle*(high-low)/(2*np.pi) + low
     # return distance
     return round(angle,3)
+
+
+def inf_as_nan(df=pd.DataFrame):
+    """Remplaza valores infinitos de un DataFrame por NaN para poder operar con ellos.
+        
+        Argumentos:
+        df_column = Columna de dataframe. 
+
+        
+    """
+
+    df.replace([np.inf, -np.inf], np.nan, inplace=True)
