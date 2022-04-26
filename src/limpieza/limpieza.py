@@ -15,3 +15,16 @@ def num_describe(data_in):
     data_out.insert(0,'sparsity', (data_in==0).sum()/len(data_in))
     data_out.insert(0,'nulls', (data_in.isna()).sum()/len(data_in))
     return data_out
+
+import numpy as np
+import pandas as pd
+def inf_as_nan(df=pd.DataFrame):
+    """Remplaza valores infinitos de un DataFrame por NaN para poder operar con ellos.
+        
+        Argumentos:
+        df_column = Columna de dataframe. 
+
+        
+    """
+
+    df.replace([np.inf, -np.inf], np.nan, inplace=True)
