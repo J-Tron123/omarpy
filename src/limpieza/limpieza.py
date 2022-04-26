@@ -78,6 +78,23 @@ def inf_as_nan(df=pd.DataFrame):
     """
 
     df.replace([np.inf, -np.inf], np.nan, inplace=True)
+    
+def mice_impute_nans(df):
+    ''' función que utiliza la Imputación Múltiple por Ecuaciones Encadenadas
+        function which uses Multiple Imputation by Chained Equation
+    
+        argumentos:
+        dataFrame = datos sin valores que faltan 
+        arguments: 
+        dataframe = dataframe without missing values''' 
+
+    cols = df.columns
+    imputed_df =MICE( min_value= 0).fit_transform(df.values)
+    imputed_df = pd.DataFrame(imputed_df)
+    imputed_df.set_index(df.index, inplace=True)
+    imputed_df.columns= cols
+
+    return imputed_df
 
 
 def remove_units (DataFrame, columns, units):
