@@ -486,3 +486,64 @@ def load_model(model_path):
     model = tf.keras.models.load_model(model_path)
 
     return model
+
+
+import optuna
+from sklearn.model_selection import train_test_split
+import xgboost
+from sklearn.metrics import accuracy_score
+def XgBoost_X_y(X,y):
+    X_train_ex, X_test_ex, y_train, y_test =  train_test_split(X, y, test_size = 0.20, random_state = 1)
+    def objectiveXgboost(trial):
+        scaler=StandardScaler()
+        X_train=scaler.fit_transform(X_train_ex)
+        X_test=scaler.fit_transform(X_test_ex) #Estandarizamos los datos
+        dtrain = xgboost.DMatrix(X_train, label=y_train) #xgboost necesita una matriz de entrada
+        dtest = xgboost.DMatrix(X_test, label=y_test)
+
+        #Probamos diferentes parametros que se elegiran por optimización bayesiana
+        param = {
+            "silent": 1,
+            "objective": "binary:logistic",
+            "eval_metric": "auc",
+            "booster": trial.suggest_categorical("booster", ["gbtree","gblinear", "dart"]), #Usa modelos basados en arboles.Tambien es posible la opción de "gblinear" que utiliza funciones lineales
+            "lambda": trial.suggest_loguniform("lambda", 1e-2, 10),              #Término de regularización L2 sobre pesos. Aumentar este valor hará que el modelo sea más conservador.
+            "alpha": trial.suggest_loguniform("alpha", 1e-2, 10),                #Término de regularización L1 sobre pesos. Aumentar este valor hará que el modelo sea más conservador.
+        }
+
+        if param["booster"] == "gbtree" or param["booster"] == "dart":
+            param["max_depth"] = trial.suggest_int("max_depth", 1, 15)  #Profundidad máxima del arbol.
+            param["eta"] = trial.suggest_loguniform("eta", 1e-2, 5)     #alias: "Learning rate". Contracción del tamaño del paso utilizada en la actualización para evitar el sobreajuste
+            param["gamma"] = trial.suggest_loguniform("gamma", 1e-2, 5) #Reducción de pérdida mínima necesaria para realizar una partición adicional en un nodo de hoja del árbol. Cuanto mayor gammasea, más conservador será el algoritmo.
+            param["grow_policy"] = trial.suggest_categorical("grow_policy", ["depthwise", "lossguide"])  #Controla la forma en que se agregan nuevos nodos al árbol.
+        if param["booster"] == "dart":
+            param["sample_type"] = trial.suggest_categorical("sample_type", ["uniform", "weighted"])
+            param["normalize_type"] = trial.suggest_categorical("normalize_type", ["tree", "forest"])
+            param["rate_drop"] = trial.suggest_loguniform("rate_drop", 1e-3, 1.0)
+            param["skip_drop"] = trial.suggest_loguniform("skip_drop", 1e-3, 1.0)
+
+        # Add a callback for pruning.
+        pruning_callback = optuna.integration.XGBoostPruningCallback(trial, "validation-auc")
+        bst = xgboost.train(param, dtrain, evals=[(dtest, "validation")], callbacks=[pruning_callback])
+        preds = bst.predict(dtest)
+        pred_labels = np.rint(preds)
+        accuracy = accuracy_score(y_test, pred_labels)
+        return accuracy
+    return objectiveXgboost
+
+
+def optunaXGBOOST(X,y):                                         #Argumentos de entrada para funcion Xgboost x Optuna. "X" debe ser un dataframe de datos numericos. "y" debe ser el target numerico.      
+    
+    objective=XgBoost_X_y(X,y)
+    study = optuna.create_study(direction="maximize")
+    study.optimize(objective,n_trials=150)                      #Llamamos a nuestra función a optimizar con optuna
+
+    trial = study.best_trial
+
+    params = []
+
+    for key, value in trial.params.items():
+        params.append(value)
+        print("    {}: {}".format(key, value))                  #Se mostrarán los valores escogidos por optimización bayesiana mas adecuados para el problema 
+    fig = optuna.visualization.plot_param_importances(study)
+    fig.show()
