@@ -70,3 +70,115 @@ def scaler(scaler: str, data: np.array):
             
     except ValueError:
         print('Choose one of the scalers listed.')
+    
+def run_model(X_train, X_test, y_train, y_test, model_name, params): # params = funcion Miguel
+    ''' Esta función sirve para correr los diferentes modelos de machine learning.
+
+    Args:
+        X_train, X_test, y_train, y_test: división del dataset en train y test.
+        model_name: modelo que se quiere probar ***(ej. LogisticRegression, RandomForestClassifier, XGBoost...).***
+        params: (***funciones de Miguel***) (ej.: función X - para x, función Y, para y.)
+    
+    Return:
+        El modelo entrenado con los parámetros indicados en la llamada de la función.
+    '''
+    model = model_name(params)
+    model.fit(X_train, y_train)
+    return model
+
+def prediction(model, X_test):
+    ''' Función para relaizar las predicciones del modelo de machine learning sobre la parte de test.
+
+    Args:
+        model: indicar la variable correspondiente al modelo entrenado.
+        X_test: indicar la variable correspondiente a test sobre la que se van a realizar las predicciones.
+    
+    Return:
+       Un array con las predicciones realizadas.
+    '''
+    preds = model.predict(X_test).round(0)
+    return preds
+
+def c_mat(y_test, X_test, model):
+    ''' Generación de una matriz de confusión a partir de los resultados 
+    obtenidos de las predicciones realizadas sobre la parte de test.
+
+    Args:
+        y_test: variable que contiene la 'target' de la parte de test.
+        X_test: variable que contiene las 'features' de la parte de test.
+
+    Return:
+        La matriz de confusión en base a los argumentos introducidos.
+    '''
+    from sklearn.metrics import confusion_matrix
+    
+    c_mat = confusion_matrix(y_test, model.predict(X_test).round(0))
+    return c_mat
+
+def class_results(y_test, pred_y):
+    ''' Resultados obtenidos a partir de un modelo de classificación.
+
+    Args:
+        y_test: variable con la 'target' de test.
+        pred_y: variable con las predicciones sobre el test.
+
+    Return:
+        Reporte sobre los resultados obtenidos.
+        Matriz de confusión mostrada con un 'heatmap' de seaborn.
+    '''
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+    from sklearn.metrics import confusion_matrix, classification_report
+    
+    conf_matrix = confusion_matrix(y_test, pred_y)
+    plt.figure(figsize=(9,6))
+    sns.heatmap(conf_matrix, annot=True)
+    plt.title('Confusion matrix')
+    plt.ylabel('True class')
+    plt.xlabel('Predicted class')
+    print (classification_report(y_test, pred_y))
+
+def binary_class_metrics(y_train, y_test):
+    ''' Resultado de las métricas de accuracy, precision, recall y
+    f1 score para modelos de clasificación binaria.
+
+    Args:
+        y_train: variable con la 'target' de la parte de train.
+        y_test: variable con la 'target' de la parte de test.
+    
+    Return:
+        Print de las 4 métricas indicadas: accuracy, precision,
+        recall, f1 score.
+    '''
+    from sklearn import metrics
+
+    accuracy = metrics.accuracy_score(y_train, y_test)
+    print('Accuracy score:', accuracy)
+
+    precision = metrics.precision_score(y_train, y_test)
+    print('Precision score:', precision)
+
+    recall = metrics.recall_score(y_train, y_test)
+    print('Recall score:', recall)
+
+    f1_score = metrics.f1_score(y_train, y_test)
+    print('F1 score:', f1_score)
+
+def precision_recall_AUC(y_train, y_test):
+    ''' Resultado de la métrica AUC a partir del modelo
+    entrenado.
+
+    Args:
+        y_train: variable con la 'target' de la parte de train.
+        y_test: variable con la 'target' de la parte de test.
+    
+    Return:
+        El score de AUC en base a los argumentos indicados.
+    '''
+    from sklearn import metrics
+
+    recall = metrics.recall_score(y_train, y_test)
+    precision = metrics.precision_score(y_train, y_test)
+    auc = auc(recall, precision)
+
+    return auc
