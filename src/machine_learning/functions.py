@@ -8,8 +8,11 @@ import tensorflow as tf
 
 import sys
 import os
+import urllib.request
 
+from PIL import Image
 import cv2
+
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -349,7 +352,7 @@ def scaler(scaler: str, data: np.array):
 
     Args:
         scaler: A scaler to choose from sklearn library. StandardScaler, MinMaxScaler, MaxAbsScaler, RobustScaler
-        data: Array like data to be scaled.
+        data: Matrix like data to be scaled. Has to be a minimum of two dimensions.
     
     Returns:
         The data scaled.
@@ -365,7 +368,7 @@ def scaler(scaler: str, data: np.array):
             return RobustScaler().fit_transform(data)
             
     except ValueError:
-        print('Choose one of the scalers listed.')
+        print('Choose one of the scalers listed or pass through a matrix of at least two dimension for data.')
     
 def run_model(X_train, X_test, y_train, y_test, model_name, params): # params = funcion Miguel
     ''' Esta función sirve para correr los diferentes modelos de machine learning.
@@ -487,3 +490,11 @@ def load_model(model_path):
     model = tf.keras.models.load_model(model_path)
 
     return model
+
+def omar():
+    """
+    This functions shows the 1% world IQ character.
+    """
+    urllib.request.urlretrieve("https://media-exp1.licdn.com/dms/image/C4E03AQH9NsUvxFQggA/profile-displayphoto-shrink_800_800/0/1575987701586?e=1656547200&v=beta&t=DM8kWl83h9U6nsRzt3_jqE3b13JjzRljAE6CWVkSNCk", "omar.png")     
+    img = Image.open("omar.png")
+    img.show()
