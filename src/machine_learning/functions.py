@@ -473,3 +473,20 @@ def precision_recall_AUC(y_train, y_test):
     auc = auc(recall, precision)
 
     return auc
+<<<<<<< HEAD
+=======
+>>>>>>> b11f85c06f148412bc3fda9f0da28b332ddcb597
+
+def load_model(model_path):
+    '''carga el modelo
+       loads model 
+        
+       argumentos: 
+       directorio de modelo = pesos del modelo 
+       arguments: 
+       model path = model weights '''
+    
+    model = tf.keras.models.load_model(model_path)
+
+    return(model)
+>>>>>>> ce5c366cf4f53e3b0dc38eb7892823114fa741fb
