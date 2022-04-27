@@ -61,15 +61,21 @@ def graf_bar_horizon(eje_x, eje_y,  etiq_y, etiq_x, tittle, color = 'green',):
 # FUNCIÓN LINEAL
 # -------------------------------------------------------------------------------
 def f1(x):
-    '''Argumentos:
+    '''Función que retorna una figura con una gráfica lineal de los valores aportados en el eje X
+    
+    Argumentos:
         X (tuple): debe de ser un range en el que se incluya el rango de los valores de X
-        '''
+        
+     Retorno:
+        figura
+        
+    Autor: Dave
+    '''
     return 2*(x**2) + 5*x - 2
  
 
 # FUNCIÓN PARA GRÁFICO GENERAL DE EJE X E Y
 # -------------------------------------------------------------------------------
-
 
 def move_spines(x, y):
     """Esta funcion divide pone al eje y en el valor 0 de x para dividir claramente los valores positivos y
