@@ -23,7 +23,7 @@ import seaborn as sns
 import optuna
 import xgboost
 import re
-from nltk.text import stopwords
+from nltk.corpus import stopwords
 
 def Mejor_PCA_DecissionTree_Regression(X_train, X_test, y_train, y_test, metric, 
                                         list_maxComponents, list_maxDepth, list_maxFeatures):

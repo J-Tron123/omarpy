@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: omarpy
-Version: 0.0.5
+Version: 0.0.6
 Summary: UNKNOWN
 License: UNKNOWN
 Platform: UNKNOWN
@@ -10,17 +10,15 @@ Classifier: Operating System :: OS Independent
 Description-Content-Type: text/markdown
 License-File: LICENSE.txt
 
-#####################
-Omarpy
-#####################
+# Omarpy
 
 LibrerÃ­a Python desarrollada por los alumnos de la clase Febrero-2022 durante el bootcamp de data science en la escuela The Bridge | Digital Talent Accelerator
 
 *Python Library created by students at The Bridge | Digital Talent Accelerator, data science, February-2022 promotion*
 
-*********************
 
-VisiÃ³n General
+
+## VisiÃ³n General
 -----------------------------------
 
 *General Overview*
@@ -30,9 +28,9 @@ La librerÃ­a estÃ¡ diseÃ±ada para perfiles orientados a la ciencia de dato
 
 *The Library is designed for people developing projects in the data science stream, to help speed up the writing of low code scripts*
 
-*********************
 
-VisualizaciÃ³n de Datos
+
+### VisualizaciÃ³n de Datos
 -----------------------------------
 
 *Data Visualization*
@@ -42,7 +40,7 @@ Estas funcionalidades estÃ¡n diseÃ±adas para desplegar grÃ¡ficos y subplot
 
 **Funciones incluidas** *(included functions)* : graf_bar_horizon, f1, move_spines, plot_pairplot, stacked_bar_plot, num_plot, bar_hor, plot_bar_chart_with_numbers_y, plot_boxplot, data_report, grafico, scat_log_visualize, sweet_heatmap, sweet_pie_1, sweet_pie_2, sweet_cloud, plot_numerical_huetarget, escribir_a_color, plot_2dline, top100plot.
 
-Limpieza de Datos
+### Limpieza de Datos
 -----------------------------------
 
 *Data Cleaning*
@@ -52,7 +50,7 @@ Este apartado contiene una serie de mÃ¡s de 30 funcionalidades con la finalida
 
 **Funciones incluidas** *(included functions)* : drop_missings, remove_units,  to_type,  filter_df, col_to_float,  nan_as_nan,  inf_as_nan, regex_tex_all, regex_tex_first, drop_rows_by_index, get_Data, borrar_html, borrar_signos_puntuaciÃ³n, borrar_url, encoder, mean_Nan, renombrar_column, limpiar, num_describe, read_images, circ_distanc, mice_impute_nans, convertidor_espaÃ±ol,convertidor_ingles,normalize, crear_rentabilidades, beautifull_scrap, suma, contar_imagenes,create_dict_images, remover_vello, mask_fondo
 
-IngenierÃ­a de Machine Learning
+### IngenierÃ­a de Machine Learning
 -----------------------------------
 
 *Machine Learning Engineering*
