@@ -1,46 +1,46 @@
-from matplotlib import pyplot
-import plotly.graph_objs as go
-from plotly.offline import iplot
-import matplotlib.pyplot as plt
-import pandas as pd
-from sklearn.metrics import recall_score, accuracy_score, auc, roc_curve
-from itertools import cycle
-from sklearn.preprocessing import label_binarize
+# -------------------------------------------------------------------------------
+# IMPORTAMOS LIBRERÍAS
+# -------------------------------------------------------------------------------
 import os
-import seaborn as sns
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-import plotly.graph_objs as go
-import seaborn as sns
-from plotly.offline import iplot
-import warnings
-warnings.filterwarnings("ignore")
 from PIL import Image
-from wordcloud import WordCloud, ImageColorGenerator
-import matplotlib.pyplot as plt
-import seaborn as sns
-import numpy as np
-from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
 from matplotlib import cm
 from matplotlib import colors
+from itertools import cycle
+from matplotlib import pyplot
+import matplotlib.pyplot as plt
+import plotly.graph_objs as go
+from plotly.offline import iplot
+from sklearn.preprocessing import label_binarize
+from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
+from sklearn.metrics import recall_score, accuracy_score, auc, roc_curve
+
+import warnings
+warnings.filterwarnings("ignore")
+
+# -------------------------------------------------------------------------------
+# IMPORTAMOS LIBRERÍAS
+# -------------------------------------------------------------------------------
 
 
-'''FUNCION GRAFICO DE BARRAS HORIZONTALES LAURA'''
-
-
+# FUNCION GRAFICO DE BARRAS HORIZONTALES
+# -------------------------------------------------------------------------------
 
 def graf_bar_horizon(eje_x, eje_y,  etiq_y, etiq_x, tittle, color = 'green',):
 
     ''' Funcion que muestra el conteo de las variables del eje_y y lo muestra de manera horizontal
 
-    INPUT:
-    eje_x (lista/pandas.series): valores que queremos que tome el eje_x, 
-    eje_y (lista/array/pandas.series): valores sobre los que queremos que se haga el conteo
-    etiq_y (str): etique del eje y
-    etiq_x (str): etique del eje x
-    tittle (str): el titulo del grafico
-    color (str): el color que queremos que tengan las barras del grafico, si no se indica nada por default sera green
+    Argumentos:
+        eje_x (lista/pandas.series): valores que queremos que tome el eje_x, 
+        eje_y (lista/array/pandas.series): valores sobre los que queremos que se haga el conteo
+        etiq_y (str): etique del eje y
+        etiq_x (str): etique del eje x
+        tittle (str): el titulo del grafico
+        color (str): el color que queremos que tengan las barras del grafico, si no se indica nada por default sera green
+       
+    Retorno:
+        figura
 
     Autor: Laura
     '''
@@ -55,15 +55,21 @@ def graf_bar_horizon(eje_x, eje_y,  etiq_y, etiq_x, tittle, color = 'green',):
 
 
 
-""" FUNCIÓN PARA GRÁFICO GENERAL DE EJE X E Y (Dave) """
-
+# FUNCIÓN PARA GRÁFICO GENERAL DE EJE X E Y
+# -------------------------------------------------------------------------------
 
 def move_spines():
 
 
-    """Esta funcion divide pone al eje y en el valor 
-    0 de x para dividir claramente los valores positivos y
-    negativos."""
+    """Esta funcion divide pone al eje y en el valor 0 de x para dividir claramente los valores positivos y
+    negativos.
+    
+    Argumentos: 
+    
+    Retorno:
+    
+    Autor: Dave
+    """
 
     import matplotlib.pyplot as plt
     import numpy as np
