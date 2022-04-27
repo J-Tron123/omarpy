@@ -100,45 +100,44 @@ def move_spines():
 
     return ax
 
-move_spines()
 
-
-
-
-""" FUNCIÓN PARA CREAR UN PAIRPLOT (Dave) 
-    1). El primer argumento o (dataset) es el nombre de la variable del dataset
-    2). Title_y es el string del Título de la gráfica, que tiene que ser el nombre de una columna, si no no sirve. """
-
-
+# Pairplot
+# -------------------------------------------------------------------------------
 
 def plot_pairplot(dataset, title_y):
+    """ FUNCIÓN PARA CREAR UN PAIRPLOT (Dave) 
+    
+    Argumento:
+        dataset (pandas dataframe): es el nombre de la variable del dataset
+        Title_y (str): Título de la gráfica, el cual debe coincidir con el nombre de la columna
+    Retorno:
+        figura
+        
+    Autor: Dave
+    """
     fig = px.box(dataset, y = title_y)
-    fig.show()
-plot_pairplot(dataset, "Título")
-
-
-
-
-
-
-
-'''FUNCION GRAFICO DE BARRAS APILADAS PARA TRES VALORES LAURA'''
-
+    return fig.show()
+   
+    
+# FUNCION GRAFICO DE BARRAS APILADAS PARA TRES VALORES
+# -------------------------------------------------------------------------------
 
 def stacked_bar_plot ( valores_x,data1,data2,data3,labels, ancho_barras, y_etiqueta,titulo ):
 
     ''' Funcion que muestra, mediante barras apliladas las frecuencias de diferentes categorias
 
-
-    INPUT:
-    valores_x (lista/array/pandas.series): valores que queremos que tome el eje_x
-    data1 (lista/pandas.series): categoria 1 obre los que queremos que se muestre la frecuencia
-    data2 (lista/pandas.series): categoria 2 obre los que queremos que se muestre la frecuencia
-    data3 (lista/pandas.series): categoria 3 obre los que queremos que se muestre la frecuencia
-    labels (lista): lista de variables que queremos que se representen en la leyenda
-    ancho_barras (int): ancho que queremos que tenga las barras
-    y_etiqueta (str): titulo del eje y
-    titulo (str): titulo del grafico
+    Argumentos:
+        valores_x (lista/array/pandas.series): valores que queremos que tome el eje_x
+        data1 (lista/pandas.series): categoria 1 obre los que queremos que se muestre la frecuencia
+        data2 (lista/pandas.series): categoria 2 obre los que queremos que se muestre la frecuencia
+        data3 (lista/pandas.series): categoria 3 obre los que queremos que se muestre la frecuencia
+        labels (lista): lista de variables que queremos que se representen en la leyenda
+        ancho_barras (int): ancho que queremos que tenga las barras
+        y_etiqueta (str): titulo del eje y
+        titulo (str): titulo del grafico
+    Retorno:
+        figura
+        
     Autor: Laura
 
     '''
@@ -159,17 +158,16 @@ def stacked_bar_plot ( valores_x,data1,data2,data3,labels, ancho_barras, y_etiqu
     return plt.show()
 
 
-
-
-
-""" FUNCIÓN PARA CREAR UN PLOT (Dave) 
-    Función para crear una gráfica líneal para darle diferentes argumentos en el np.arange para 
-    hacerlo de forma manual. """
-
+# FUNCIÓN PARA CREAR UN PLOT 
+# -------------------------------------------------------------------------------
 
 def y(o): 
-
-    return np.sin(o / 2.) * np.exp(o / 4.) + 6. * np.exp(-o / 4.)
+    '''Función para crear una gráfica líneal para darle diferentes argumentos en el np.arange para 
+    hacerlo de forma manual. 
+    
+    Autor: Dave'''
+    a = np.sin(o / 2.) * np.exp(o / 4.) + 6. * np.exp(-o / 4.)
+    return a
 
 def h(b):
     l = []
@@ -181,9 +179,6 @@ def h(b):
     
     return l
    
-
-
-
 
 # VISUALIZACIÓN (GONZALO) 
 # Histograma & Boxplot
