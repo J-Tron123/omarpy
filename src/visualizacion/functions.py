@@ -2,6 +2,7 @@
 # IMPORTAMOS LIBRERÍAS
 # -------------------------------------------------------------------------------
 import os
+import math as mt
 import numpy as np
 import pandas as pd
 from PIL import Image
@@ -70,10 +71,6 @@ def move_spines():
     
     Autor: Dave
     """
-
-    import matplotlib.pyplot as plt
-    import numpy as np
-    import math as mt
 
     fix, ax = plt.subplots()
     for spine in ["left", "bottom"]:
