@@ -1,5 +1,5 @@
 from sklearn.preprocessing import StandardScaler, MinMaxScaler, MaxAbsScaler, RobustScaler
-from sklearn.metrics import mean_absolute_error, mean_absolute_percentage_error, mean_squared_error, r2_score, confusion_matrix, classification_report
+from sklearn.metrics import mean_absolute_error, mean_absolute_percentage_error, mean_squared_error, r2_score, confusion_matrix, classification_report, accuracy_score
 from sklearn.decomposition import PCA
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.ensemble import RandomForestRegressor
@@ -9,6 +9,7 @@ import tensorflow as tf
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 import optuna
+import re
 
 import pickle
 import sys
@@ -704,15 +705,10 @@ def DF_Feature_importance(modelo, X):
         pandas.DataFrame: DataFrame con las feature importance del modelo.
     '''
     features_importances_model= pd.DataFrame(modelo.feature_importances_.round(3),
-<<<<<<< HEAD
                                             X.columns,
                                             columns = ["Feature importance"]).sort_values("Feature importance", ascending=False)
     
     return features_importances_model
-=======
-                          X.columns, 
-                          columns = ["Feature importance"]).sort_values("Feature importance", ascending=False)
-    features_importances_model
 
 def preprocess_reviews(reviews):
     """
@@ -723,9 +719,7 @@ def preprocess_reviews(reviews):
 
     Return: Texto limpio
     
-    """
-    import re
-    
+    """ 
     REPLACE_NO_SPACE = re.compile("(\.)|(\;)|(\:)|(\!)|(\?)|(\,)|(\")|(\()|(\))|(\[)|(\])|(\d+)")
     REPLACE_WITH_SPACE = re.compile("(<br\s*/><br\s*/>)|(\-)|(\/)")
     NO_SPACE = ""
@@ -767,8 +761,6 @@ def carga_datos_nlp(train_path,test_path,encoding):
 
     Return: Nada.
     """
- 
-    import os
     reviews_train = []
     for line in open(os.getcwd() + train_path, 'r', encoding=encoding):
     
@@ -778,4 +770,3 @@ def carga_datos_nlp(train_path,test_path,encoding):
     for line in open(os.getcwd() + test_path, 'r', encoding=encoding):
     
         reviews_test.append(line.strip())
->>>>>>> 397f6f2d9e4621a8373196bc86c2c409a6c41cb5
