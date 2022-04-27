@@ -321,6 +321,7 @@ def scaler(scaler: str, data: np.array):
             
     except ValueError:
         print('Choose one of the scalers listed or pass through a matrix of at least two dimension for data.')
+        
     
 def prediction(model, X_test, y_pred=None):
     ''' 
@@ -360,7 +361,7 @@ def class_results(y_test, pred_y):
     plt.title('Confusion matrix')
     plt.ylabel('True class')
     plt.xlabel('Predicted class')
-    print (classification_report(y_test, pred_y))
+    return (classification_report(y_test, pred_y))
 
 def binary_class_metrics(y_train, y_test):
     ''' 
@@ -388,6 +389,8 @@ def binary_class_metrics(y_train, y_test):
 
     f1_score = metrics.f1_score(y_train, y_test)
     print('F1 score:', f1_score)
+    
+    return accuracy, precision, recall, f1_score
 
 def precision_recall_AUC(y_test, y_pred):
     ''' 
@@ -478,7 +481,9 @@ def XgBoost_X_y(X,y,size,random):
         preds = bst.predict(dtest)
         pred_labels = np.rint(preds)
         accuracy = accuracy_score(y_test, pred_labels)
+        
         return accuracy
+      
     return objectiveXgboost
 
 def optunaXGBOOST(X,y,size,random):
@@ -504,6 +509,8 @@ def optunaXGBOOST(X,y,size,random):
         print("    {}: {}".format(key, value))                  
     fig = optuna.visualization.plot_param_importances(study)
     fig.show()
+    
+    return ()
 
 def omar():
     '''
@@ -512,6 +519,8 @@ def omar():
     urllib.request.urlretrieve("https://media-exp1.licdn.com/dms/image/C4E03AQH9NsUvxFQggA/profile-displayphoto-shrink_800_800/0/1575987701586?e=1656547200&v=beta&t=DM8kWl83h9U6nsRzt3_jqE3b13JjzRljAE6CWVkSNCk", "omar.png")     
     img = Image.open("omar.png")
     img.show()
+    
+    return ()
 
 def scores(modelo, X_test, y_test, prediction):
     '''
