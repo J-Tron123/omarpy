@@ -32,8 +32,6 @@ from .functions import (
     data_report,
     grafico,
     scat_log_visualize,
-    heatmap,
-    graphs_sub,
     sweet_heatmap, 
     sweet_pie,
     sweet_pie2,
