@@ -718,3 +718,68 @@ def DF_Feature_importance(modelo, X):
                           X.columns, 
                           columns = ["Feature importance"]).sort_values("Feature importance", ascending=False)
     features_importances_model
+
+def preprocess_reviews(reviews):
+    """
+
+    Función que nos prepara el texto eliminando mayusculas,comas y signos.
+
+    Args: Texto que queremos limpiar
+
+    Return: Texto limpio
+    
+    """
+    import re
+    
+    REPLACE_NO_SPACE = re.compile("(\.)|(\;)|(\:)|(\!)|(\?)|(\,)|(\")|(\()|(\))|(\[)|(\])|(\d+)")
+    REPLACE_WITH_SPACE = re.compile("(<br\s*/><br\s*/>)|(\-)|(\/)")
+    NO_SPACE = ""
+    SPACE = " "
+    
+    reviews = [REPLACE_NO_SPACE.sub(NO_SPACE, line.lower()) for line in reviews]
+    reviews = [REPLACE_WITH_SPACE.sub(SPACE, line) for line in reviews]
+    
+    return reviews
+
+def remove_stop_words(text,lenguage):
+    """
+    Función que elimina stopwords del idioma seleccionado.
+
+    Args: Texto e idioma.
+
+    Return: Texto limpio.
+
+
+    """
+    from nltk.text import stopwords
+    english_stop_words = stopwords.words(lenguage)
+
+    removed_stop_words = []
+    for review in text:
+        
+
+        removed_stop_words.append(
+            ' '.join([word for word in review.split() if word not in english_stop_words])
+        )
+        
+    return removed_stop_words
+
+def carga_datos_nlp(train_path,test_path,encoding):
+    """NO FUNCIONA, no guarda las variables reviews_train y reviews_test
+    Función para cargar los path de train y test.
+
+    Args: Rutas de los archivos y tipo de encoding
+
+    Return: Nada.
+    """
+ 
+    import os
+    reviews_train = []
+    for line in open(os.getcwd() + train_path, 'r', encoding=encoding):
+    
+        reviews_train.append(line.strip())
+    
+    reviews_test = []
+    for line in open(os.getcwd() + test_path, 'r', encoding=encoding):
+    
+        reviews_test.append(line.strip())
