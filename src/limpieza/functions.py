@@ -210,3 +210,49 @@ def columnascat(df,nombrecolumntarget,split=" "):                               
                     print("No se puede dividir")
         else:
             print("No es una variable categorica")
+
+def beautifull_scrap(url, headers):
+    """Función que obtiene la información de una página web mediante web scrapping
+
+    Argumentos:
+        url (str): Dirección URL de la web que se quiere atacar.
+        headers (dict): Diccionario con la cabecera que requiere la consulta a la web.
+
+    Retornos:
+        soup: HTML parseado de la librería bs4
+    """
+    import bs4 as bs, requests
+
+    response = requests.get(url, headers=headers)
+    return bs(response.content, "lxml")
+
+def drop_missings(df, axis, limit=""):
+    """Función que elimina los valores nulos de un DataFrame de la librería pandas
+
+    Argumentos:
+        df (str): DataFrame al que se limpiaran los valores nulos.
+        axis (dict): Eje de donde se toma el criterio de eliminar dichos valores nulos, 
+        si es 0 eliminara las filas con valores nulos, si es 1 eliminara las columnas con una 
+        suma de valores nulos superior al límite.
+        limit (int): Limite de valores nulos que se pueden tolerar para no eliminar una columna, por defecto es
+        el 25% de la cantidad de registros que tenga el DataFrame
+
+    Retornos:
+        df: DataFrame
+    """
+    if axis == 1:
+
+        if limit != ":":
+            limit = len(df) * 0.25
+        try:
+            limit = int(limit)
+        except:
+            return "Limit debe ser un entero"
+
+        for column in df.columns:
+            if df[column].isnull().sum() > limit:
+                df.drop(column, axis=1, inplace=True)
+    else:
+        df.dropna(axis=0, inplace=True)
+
+    return df
