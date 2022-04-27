@@ -764,7 +764,13 @@ def carga_datos_nlp(train_path,test_path,encoding):
         
 def create_dict_images(directory):
     """
-    Funcion que crea diccionario con el directorio completo de la imagen y la imagen
+    Funcion que crea diccionario con el directorio completo de la imagen y la imagen.
+
+    Args:
+        directory: El directorio.
+    
+    Returns:
+        Un diccionario de las ubicaciones de las imágenes.
     """
     image_dict = {}
    
@@ -773,6 +779,7 @@ def create_dict_images(directory):
         # Read image and convert the BGR image to RGB
         # save filename and image in dictionary 
         image_dict.update({filename: cv2.imread(full_address, cv2.COLOR_BGR2RGB)})
+
     return image_dict 
 
 
