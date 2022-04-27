@@ -1,16 +1,5 @@
 """El modulo :mod:omarpy.limpieza incluye funciones que ayudan con la limpieza de datos."""
 
-import pandas as pd 
-import numpy as np
-import regex as re
-from sklearn.model_selection import train_test_split
-import string
-from sklearn.preprocessing import LabelEncoder
-import os
-import cv2
-from fancyimpute import IterativeImputer as MICE
-import bs4 as bs, requests
-
 from .functions import (
     num_describe,
     read_images,

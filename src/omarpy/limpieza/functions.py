@@ -1,13 +1,15 @@
-import pandas as pd 
-import numpy as np
-import regex as re  
-from sklearn.model_selection import train_test_split
 import string
-from sklearn.preprocessing import LabelEncoder
+import requests
 import os
 import cv2
+import pandas as pd
+import numpy as np
+import regex as re
+import bs4 as bs
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder
 from fancyimpute import IterativeImputer as MICE
-import bs4 as bs, requests
+
 
 
 def drop_missings(df, axis, limit=""):

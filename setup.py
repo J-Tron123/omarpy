@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="omarpy",
-    version="0.0.2",
+    version="0.0.4",
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
