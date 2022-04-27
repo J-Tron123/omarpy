@@ -4,12 +4,9 @@ from sklearn.decomposition import PCA
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.ensemble import RandomForestRegressor
 from xgboost import XGBRegressor
-import xgboost
 import tensorflow as tf
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
-import optuna
-import re
 
 import pickle
 import sys
@@ -26,6 +23,11 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+
+import optuna
+import xgboost
+import re
+
 
 def remover_vello(imagen: np.array):
     '''
@@ -386,8 +388,7 @@ def scaler(scaler: str, data: np.array):
         print('Choose one of the scalers listed or pass through a matrix of at least two dimension for data.')
     
 def run_model(X_train, X_test, y_train, y_test, model_name, params): # params = funcion Miguel
-    '''
-    Esta función sirve para correr los diferentes modelos de machine learning.
+    ''' Esta función sirve para correr los diferentes modelos de machine learning.
 
     Args:
         X_train, X_test, y_train, y_test: división del dataset en train y test.
@@ -402,8 +403,7 @@ def run_model(X_train, X_test, y_train, y_test, model_name, params): # params = 
     return model
 
 def prediction(model, X_test):
-    '''
-    Función para relaizar las predicciones del modelo de machine learning sobre la parte de test.
+    ''' Función para relaizar las predicciones del modelo de machine learning sobre la parte de test.
 
     Args:
         model: indicar la variable correspondiente al modelo entrenado.
@@ -416,8 +416,7 @@ def prediction(model, X_test):
     return preds
 
 def c_mat(y_test, X_test, model):
-    ''' 
-    Generación de una matriz de confusión a partir de los resultados 
+    ''' Generación de una matriz de confusión a partir de los resultados 
     obtenidos de las predicciones realizadas sobre la parte de test.
 
     Args:
@@ -433,8 +432,7 @@ def c_mat(y_test, X_test, model):
     return c_mat
 
 def class_results(y_test, pred_y):
-    ''' 
-    Resultados obtenidos a partir de un modelo de classificación.
+    ''' Resultados obtenidos a partir de un modelo de classificación.
 
     Args:
         y_test: variable con la 'target' de test.
@@ -453,8 +451,7 @@ def class_results(y_test, pred_y):
     print (classification_report(y_test, pred_y))
 
 def binary_class_metrics(y_train, y_test):
-    '''
-    Resultado de las métricas de accuracy, precision, recall y
+    ''' Resultado de las métricas de accuracy, precision, recall y
     f1 score para modelos de clasificación binaria.
 
     Args:
@@ -480,8 +477,7 @@ def binary_class_metrics(y_train, y_test):
     print('F1 score:', f1_score)
 
 def precision_recall_AUC(y_train, y_test):
-    ''' 
-    Resultado de la métrica AUC a partir del modelo
+    ''' Resultado de la métrica AUC a partir del modelo
     entrenado.
 
     Args:
@@ -500,51 +496,63 @@ def precision_recall_AUC(y_train, y_test):
     return auc
 
 def load_model(model_path):
-    '''
-    carga el modelo
-    loads model 
-    
-    argumentos: 
-    directorio de modelo = pesos del modelo 
-    arguments: 
-    model path = model weights
-    '''
+    '''carga el modelo
+       loads model 
+        
+       argumentos: 
+       directorio de modelo = pesos del modelo 
+       arguments: 
+       model path = model weights '''
     
     model = tf.keras.models.load_model(model_path)
 
     return model
 
-def XgBoost_X_y(X,y):
-    X_train_ex, X_test_ex, y_train, y_test =  train_test_split(X, y, test_size = 0.20, random_state = 1)
+def XgBoost_X_y(X,y,size,random):
+    """
+    Función para seleccionar nuestras variables X e y, tamaño del test y random state.
+
+    Args: X = Variable X, y = Variable target, size = tamaño del test, random = numero de random state.
+        
+ 
+    """
+    X_train_ex, X_test_ex, y_train, y_test =  train_test_split(X, y, test_size = size, random_state = random)
+
     def objectiveXgboost(trial):
+        """
+        Función que llama a la anterior ''XgBoost_X_y'' y elige diferentes parametros por optimización bayesania.
+
+        Args: trial = Las veces que se recorrera los parametros para que Optuna eliga el mejor, se le añadira un numero entero.
+
+        Return: Parametros y accuracy.
+        """
         scaler=StandardScaler()
         X_train=scaler.fit_transform(X_train_ex)
-        X_test=scaler.fit_transform(X_test_ex) #Estandarizamos los datos
-        dtrain = xgboost.DMatrix(X_train, label=y_train) #xgboost necesita una matriz de entrada
+        X_test=scaler.fit_transform(X_test_ex) 
+        dtrain = xgboost.DMatrix(X_train, label=y_train) 
         dtest = xgboost.DMatrix(X_test, label=y_test)
 
-        #Probamos diferentes parametros que se elegiran por optimización bayesiana
+        
         param = {
             "silent": 1,
             "objective": "binary:logistic",
             "eval_metric": "auc",
-            "booster": trial.suggest_categorical("booster", ["gbtree","gblinear", "dart"]), #Usa modelos basados en arboles.Tambien es posible la opción de "gblinear" que utiliza funciones lineales
-            "lambda": trial.suggest_loguniform("lambda", 1e-2, 10),              #Término de regularización L2 sobre pesos. Aumentar este valor hará que el modelo sea más conservador.
-            "alpha": trial.suggest_loguniform("alpha", 1e-2, 10),                #Término de regularización L1 sobre pesos. Aumentar este valor hará que el modelo sea más conservador.
-        }
+            "booster": trial.suggest_categorical("booster", ["gbtree","gblinear", "dart"]), 
+            "lambda": trial.suggest_loguniform("lambda", 1e-2, 10),              
+            "alpha": trial.suggest_loguniform("alpha", 1e-2, 10),}               
 
         if param["booster"] == "gbtree" or param["booster"] == "dart":
-            param["max_depth"] = trial.suggest_int("max_depth", 1, 15)  #Profundidad máxima del arbol.
-            param["eta"] = trial.suggest_loguniform("eta", 1e-2, 5)     #alias: "Learning rate". Contracción del tamaño del paso utilizada en la actualización para evitar el sobreajuste
-            param["gamma"] = trial.suggest_loguniform("gamma", 1e-2, 5) #Reducción de pérdida mínima necesaria para realizar una partición adicional en un nodo de hoja del árbol. Cuanto mayor gammasea, más conservador será el algoritmo.
-            param["grow_policy"] = trial.suggest_categorical("grow_policy", ["depthwise", "lossguide"])  #Controla la forma en que se agregan nuevos nodos al árbol.
+            param["max_depth"] = trial.suggest_int("max_depth", 1, 15)  
+            param["eta"] = trial.suggest_loguniform("eta", 1e-2, 5)     
+            param["gamma"] = trial.suggest_loguniform("gamma", 1e-2, 5) 
+            param["grow_policy"] = trial.suggest_categorical("grow_policy", ["depthwise", "lossguide"])  
         if param["booster"] == "dart":
             param["sample_type"] = trial.suggest_categorical("sample_type", ["uniform", "weighted"])
             param["normalize_type"] = trial.suggest_categorical("normalize_type", ["tree", "forest"])
             param["rate_drop"] = trial.suggest_loguniform("rate_drop", 1e-3, 1.0)
             param["skip_drop"] = trial.suggest_loguniform("skip_drop", 1e-3, 1.0)
 
-        # Add a callback for pruning.
+        
         pruning_callback = optuna.integration.XGBoostPruningCallback(trial, "validation-auc")
         bst = xgboost.train(param, dtrain, evals=[(dtest, "validation")], callbacks=[pruning_callback])
         preds = bst.predict(dtest)
@@ -553,23 +561,27 @@ def XgBoost_X_y(X,y):
         return accuracy
     return objectiveXgboost
 
+def optunaXGBOOST(X,y,size,random):
+    """
+    Optimiza todos los parametros de las funciones anteriores.
 
-def optunaXGBOOST(X,y):                                         #Argumentos de entrada para funcion Xgboost x Optuna. "X" debe ser un dataframe de datos numericos. "y" debe ser el target numerico.      
-    
-    objective=XgBoost_X_y(X,y)
+    Args: X = Variable X, y = Variable target, size = tamaño del test, random = numero de random state.
+        
+ 
+    """
+
+    objective=XgBoost_X_y(X,y,size,random)
     study = optuna.create_study(direction="maximize")
-    study.optimize(objective,n_trials=150)                      #Llamamos a nuestra función a optimizar con optuna
-
+    study.optimize(objective,n_trials=150)                      
     trial = study.best_trial
 
     params = []
 
     for key, value in trial.params.items():
         params.append(value)
-        print("    {}: {}".format(key, value))                  #Se mostrarán los valores escogidos por optimización bayesiana mas adecuados para el problema 
+        print("    {}: {}".format(key, value))                  
     fig = optuna.visualization.plot_param_importances(study)
     fig.show()
-
 def omar():
     """
     This functions shows the 1% world IQ character.
@@ -613,7 +625,6 @@ def similarity_index(df_col=np.array, cons=float, exp=0.8):
         pandas.Series: Valor de similitud estadístico.
     '''
     sim = df_col.apply(lambda x: (1 - abs((x - cons)/(x + cons)))**exp)
-
     return sim
 
 def step_axis(init_val=float, num_vals=float, steps=float):
@@ -627,7 +638,9 @@ def step_axis(init_val=float, num_vals=float, steps=float):
     Retornos:
         np.array: array de ejes
     '''
-    return init_val + np.arange(num_vals)*steps
+
+    axis = init_val + np.arange(num_vals)*steps
+    return axis
 
 def percentil(data, nivel):
     """Función para saber los percentiles del dataframe
@@ -638,6 +651,7 @@ def percentil(data, nivel):
 
     Retornos:
         list: Los limites superiores e inferiores
+
     """
     # Límites superior e inferior por percentiles
     superior = np.percentile(data, 100 - nivel)
@@ -653,6 +667,7 @@ def metodo_iqr(data):
 
     Retornos:
         list: Los limites superiores e inferiores
+
     """
     # Cualcular el IQR (Rango intercuantilico)
     perc_75 = np.percentile(data, 75)
@@ -672,6 +687,7 @@ def metodo_std(data):
 
     Retornos:
         list: Los limites superiores e inferiores
+
     """
     # Creación de tres desviaciones estándar fuera de los límites
     std = np.std(data)
@@ -709,7 +725,7 @@ def preprocess_reviews(reviews):
 
     Return: Texto limpio
     
-    """ 
+    """
     REPLACE_NO_SPACE = re.compile("(\.)|(\;)|(\:)|(\!)|(\?)|(\,)|(\")|(\()|(\))|(\[)|(\])|(\d+)")
     REPLACE_WITH_SPACE = re.compile("(<br\s*/><br\s*/>)|(\-)|(\/)")
     NO_SPACE = ""
@@ -774,3 +790,4 @@ def create_dict_images(directory):
             image_dict.update({filename: cv2.imread(full_address, cv2.COLOR_BGR2RGB)})
 
     return(image_dict)
+        reviews_test.append(line.strip())
