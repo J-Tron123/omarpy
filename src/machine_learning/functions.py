@@ -5,7 +5,6 @@ from sklearn.tree import DecisionTreeRegressor
 from sklearn.ensemble import RandomForestRegressor
 from xgboost import XGBRegressor
 import tensorflow as tf
-from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 
 from prettytable import PrettyTable
@@ -17,7 +16,6 @@ import pandas as pd
 import numpy as np
 import urllib.request
 from PIL import Image
-import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -697,34 +695,6 @@ def remove_stop_words(text,lenguage):
         )
     return removed_stop_words
     
-<<<<<<< HEAD
-        reviews_train.append(line.strip())
-    
-    reviews_test = []
-    for line in open(os.getcwd() + test_path, 'r', encoding=encoding):
-    
-        reviews_test.append(line.strip())
-        
-def create_dict_images(directory):
-    """
-    Funcion que crea diccionario con el directorio completo de la imagen y la imagen.
-
-    Args:
-        directory: El directorio.
-    
-    Returns:
-        Un diccionario de las ubicaciones de las imágenes.
-    """
-    image_dict = {}
-   
-    for filename in os.listdir(directory):
-        full_address = directory + '/' + filename
-        # Read image and convert the BGR image to RGB
-        # save filename and image in dictionary 
-        image_dict.update({filename: cv2.imread(full_address, cv2.COLOR_BGR2RGB)})
-
-    return image_dict 
-=======
 def sweet_table(X_test, y_test, *arbitrarios):
    '''
     Nos proporciona una pequeña descripción de las principales métricas a utilizar par evaluar el rendimiento
@@ -742,7 +712,6 @@ def sweet_table(X_test, y_test, *arbitrarios):
       y_test (np.array): (Ver Descripción)
       *arbitrareos (str): Serán uno o varios algoritmos con los que se quiere entrenar y evaluar nuestro modelo de ML.
    '''
->>>>>>> 037a6c552f3f0d6739a768921c80b79d8a06b62d
 
    names = ['Metrics']
    maes = ['mae']
