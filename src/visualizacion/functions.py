@@ -54,7 +54,6 @@ def graf_bar_horizon(eje_x, eje_y,  etiq_y, etiq_x, tittle, color = 'green',):
     plt.ylabel(etiq_y)
     plt.xlabel(etiq_x)
     plt.title(tittle)
-
     return plt.show()
 
 
@@ -103,11 +102,12 @@ def move_spines(x, y):
     plt.show()
     return ax
 
+
 # Pairplot
 # -------------------------------------------------------------------------------
 
 def plot_pairplot(dataset, title_y):
-    """ FUNCIÓN PARA CREAR UN PAIRPLOT (Dave) 
+    """ Creación de pairplot
     
     Argumento:
         dataset (pandas dataframe): es el nombre de la variable del dataset
@@ -150,13 +150,10 @@ def stacked_bar_plot ( valores_x,data1,data2,data3,labels, ancho_barras, y_etiqu
     plt.bar(indice, data2, label = labels[1],  width=ancho_barras, bottom= data1,color= 'Goldenrod', edgecolor ='Gray')
     plt.bar(indice, data3, label = labels[2], width = ancho_barras,bottom= np.array(data1)+np.array(data2), color = 'DarkKhaki', edgecolor = 'Gray')
     plt.xticks(indice,valores_x)
-
     plt.ylabel (y_etiqueta, size= 15)
     plt.title (titulo, fontdict= {'color': 'white', 'weight': 'bold', 'size': 16 }, loc= 'center', pad=20, alpha= 0.)
     plt.grid (True, alpha=0.1)
-
     plt.legend()
-
     return plt.show()
    
 
@@ -211,22 +208,17 @@ def bar_hor(df, a, b, title=None, xlabels=None):
 
     Autor: Gonzalo
     '''
-    # Set styles for axes
     plt.rcParams['axes.edgecolor']='#333F4B'
     plt.rcParams['axes.linewidth']=0.8
     plt.rcParams['xtick.color']='#333F4B'
     plt.rcParams['ytick.color']='#333F4B'
-
-    # Plot
     fig, ax = plt.subplots(figsize=(5,3.5))
     plt.hlines(df.a, xmin=0, xmax=df.b, color='#007acc', alpha=0.5, linewidth=5)
-
     plt.xticks(rotation=90)
     plt.plot(df.b, df.a, "o", markersize=5, color='#007acc', alpha=0.9)
     plt.title(title)
     plt.xlabel(xlabels)
     plt.show()
-
     return fig
 
 
@@ -274,7 +266,6 @@ def plot_boxplot(param1, param2):
    
     Autor: Gretel
     """
-
     fig = px.box(param1, param2)
     return fig.show()
 
@@ -345,7 +336,6 @@ def grafico(df,col1,col2,titulo_x,titulo_graf):
     fig = go.Figure(data = data, layout = layout)
     fig.update_xaxes(
         tickangle = 90)
-
     return iplot(fig)
 
 
@@ -379,29 +369,9 @@ def scat_log_visualize(figuresize=(10,10), xlim=(10,10), ylim=(10,10), xlabel="X
     sns.color_palette("hls", 8)
     sns.scatterplot(x,
                     y,
-                    s=100);
-    
-
-# GENERACION DE SUBPLOTS
-# -------------------------------------------------------------------------------
-
-def graphs_sub(number_r, number_c):
-    
-    """Crear Subplots con el número de filas y columnas dadas.
-    Argumentos:
-        number_r (int): Número de filas o rows.
-        number_c (int): Número de columnas o columns.       
-        
-    Retornos:
-        fig: Subplots.
-        axes: axis de los subplots
-    """
-    import matplotlib.pyplot as plt
-    plt.rcParams.update({'font.size': 15})    
-    fig, axes= plt.subplots(number_r, number_c, figsize = (number_c * 8, number_r * 8))
-
-    return fig, axes
-
+                    s=100)
+    return plt.show()
+   
 
 # MAPA DE CALOR DE CORRELACIÓN
 # -------------------------------------------------------------------------------
@@ -452,7 +422,6 @@ def sweet_pie_1(values, labels, title):
     """
     colors = sns.color_palette('pastel')
     explode =  [0] * len(values)
-
     fig, ax = plt.subplots()
     ax.pie(values, labels = labels,
             colors = colors,
@@ -462,7 +431,6 @@ def sweet_pie_1(values, labels, title):
             startangle = 180)
 
     ax.set_title(title, weight='bold')
-
     return plt.show()
 
 
@@ -492,7 +460,6 @@ def sweet_pie_2(values, labels, title):
             explode = explode,
             shadow = True,
             startangle = 180)
-
     ax.set_title(title, weight='bold')
     plt.axis("equal")
     return plt.show()
@@ -540,10 +507,6 @@ def sweet_cloud(path, text):
     Autor: Alfonso
     """
     stopwords = set(STOPWORDS)
-    # picture = Image.open(jfif_path).convert("RGBA")
-    # image = Image.new("RGB", picture.size, "WHITE")
-    # image.paste(picture, (0, 0), picture)
-    # mask = np.array(image)
     mask = np.array(Image.open(path))
     mask[mask == 1] = 255
     wordcloud = WordCloud(stopwords=stopwords, background_color="white", max_words=1000, mask=mask,
