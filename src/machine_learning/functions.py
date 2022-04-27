@@ -1,5 +1,5 @@
 from sklearn.preprocessing import StandardScaler, MinMaxScaler, MaxAbsScaler, RobustScaler
-from sklearn.metrics import mean_absolute_error, mean_absolute_percentage_error, mean_squared_error, r2_score, confusion_matrix, classification_report, accuracy_score
+from sklearn.metrics import recall_score, precision_score, roc_auc_score, mean_absolute_error, mean_absolute_percentage_error, mean_squared_error, r2_score, confusion_matrix, classification_report, accuracy_score
 from sklearn.decomposition import PCA
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.ensemble import RandomForestRegressor
@@ -439,24 +439,22 @@ def binary_class_metrics(y_train, y_test):
     f1_score = metrics.f1_score(y_train, y_test)
     print('F1 score:', f1_score)
 
-def precision_recall_AUC(y_train, y_test):
+def precision_recall_AUC(y_test, y_pred):
     ''' 
     Resultado de la métrica AUC a partir del modelo entrenado.
 
     Args:
-        y_train: variable con la 'target' de la parte de train.
         y_test: variable con la 'target' de la parte de test.
+        y_pred: variable con la las predicciones sobre la 'target'.
     
     Return:
         El score de AUC en base a los argumentos indicados.
     '''
-    from sklearn import metrics
+    recall = recall_score(y_test, y_pred).round(3)
+    precision = precision_score(y_test, y_pred).round(3)
+    auc = roc_auc_score(y_test, y_pred).round(3)
 
-    recall = metrics.recall_score(y_train, y_test)
-    precision = metrics.precision_score(y_train, y_test)
-    auc = auc(recall, precision)
-
-    return auc
+    return print('Precision:', precision,',', 'Recall:', recall,',', 'ROC AUC score:', auc)
 
 def load_model(model_path):
     '''
