@@ -8,6 +8,8 @@ import tensorflow as tf
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 
+from prettytable import PrettyTable
+
 import pickle
 import sys
 import os
@@ -24,56 +26,6 @@ import optuna
 import xgboost
 import re
 from nltk.text import stopwords
-
-
-def remover_vello(imagen: np.array):
-    '''
-    Se aplica una máscara para eliminar el vello en la imagen. La función devuelve una `imagen` con las
-    mismas dimensiones que la original.
-    
-    Args:
-        imagen: Matríz con valores entre 0 y 255.
-
-    Returns:
-        new_img: La imagen (matríz) con los filtros aplicados.
-    '''
-    try:
-        #1. Convertir a escala de grises
-        img_grayScale = cv2.cvtColor(imagen, cv2.COLOR_BGR2GRAY)
-        # Kernel para el filtrado morfológico
-        kernel = cv2.getStructuringElement(1,(17,17))
-        # Filtrado BlackHat para encontrar los contornos del cabello
-        blackhat = cv2.morphologyEx(img_grayScale, cv2.MORPH_BLACKHAT, kernel)
-        # Intensificar los contornos del cabello en preparación para el algoritmo de pintura
-        _,mask = cv2.threshold(blackhat,12,255,cv2.THRESH_BINARY)
-        # Pintar la imagen original dependiendo de la máscara
-        new_img = cv2.inpaint(imagen,mask,1,cv2.INPAINT_TELEA)
-
-        return new_img
-    
-    except:
-        print(f'El formato {imagen} no es el adecuado. Revisa la descripción de la función.')
-
-def mask_fondo(imagen: np.array):
-    '''
-    Función para eliminar el fondo de la imagen.
-
-    Args:
-        imagen: Matríz con valores entre 0 y 255.
-
-    Returns:
-        new_img: La imagen (matríz) con los filtros aplicados.
-    '''
-    try:
-        gray_example = cv2.cvtColor(imagen, cv2.COLOR_BGR2GRAY)
-        _, mask = cv2.threshold(gray_example, 120, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
-        mask_inv = cv2.bitwise_not(mask) 
-        new_img = cv2.bitwise_and(imagen,imagen,mask = mask_inv)
-
-        return new_img
-
-    except:
-        print(f'El formato {imagen} no es el adecuado. Revisa la descripción de la función.')
 
 def Mejor_PCA_DecissionTree_Regression(X_train, X_test, y_train, y_test, metric, 
                                         list_maxComponents, list_maxDepth, list_maxFeatures):
@@ -554,6 +506,7 @@ def optunaXGBOOST(X,y,size,random):
         print("    {}: {}".format(key, value))                  
     fig = optuna.visualization.plot_param_importances(study)
     fig.show()
+
 def omar():
     '''
     This functions shows the 1% world IQ character.
@@ -662,7 +615,6 @@ def metodo_iqr(data):
     # Devuelve los límites superior e inferior
     return [iqr_inferior, iqr_superior]
 
-
 def metodo_std(data):
     '''
     Función para saber los limites con la desviacion estandar
@@ -730,9 +682,11 @@ def remove_stop_words(text,lenguage):
     '''
     Función que elimina stopwords del idioma seleccionado.
 
-    Args: Texto e idioma.
+    Args: 
+        Texto e idioma.
 
-    Return: Texto limpio.
+    Return: 
+        Texto limpio.
     '''
     english_stop_words = stopwords.words(lenguage)
 
@@ -742,19 +696,8 @@ def remove_stop_words(text,lenguage):
             ' '.join([word for word in review.split() if word not in english_stop_words])
         )
     return removed_stop_words
-
-def carga_datos_nlp(train_path,test_path,encoding):
-    '''
-    NO FUNCIONA, no guarda las variables reviews_train y reviews_test
-    Función para cargar los path de train y test.
-
-    Args: Rutas de los archivos y tipo de encoding
-
-    Return: Nada.
-    '''
-    reviews_train = []
-    for line in open(os.getcwd() + train_path, 'r', encoding=encoding):
     
+<<<<<<< HEAD
         reviews_train.append(line.strip())
     
     reviews_test = []
@@ -781,5 +724,53 @@ def create_dict_images(directory):
         image_dict.update({filename: cv2.imread(full_address, cv2.COLOR_BGR2RGB)})
 
     return image_dict 
+=======
+def sweet_table(X_test, y_test, *arbitrarios):
+   '''
+    Nos proporciona una pequeña descripción de las principales métricas a utilizar par evaluar el rendimiento
+    de nuestro modelo de ML. Nota: los modelos pasados deben tener las mismas features.
+    Siempre y cuando se siga el siguiente proceso: 
+    1) X_train, X_test, y_train, y_test = train_test_split(X_scaled, y)
+    2) Con nuestro modelo definido (ejemplo):
+       model = LGBMRegressor()
+       model1 = LinearRegression()
+    3) Entrenado nuestro modelo:
+       model.fit(X_train, y_train)
+       model1.fit(X_train, y_train)
+    Argumentos:
+      X_test (np.array): (Ver Descripción)
+      y_test (np.array): (Ver Descripción)
+      *arbitrareos (str): Serán uno o varios algoritmos con los que se quiere entrenar y evaluar nuestro modelo de ML.
+   '''
+>>>>>>> 037a6c552f3f0d6739a768921c80b79d8a06b62d
 
+   names = ['Metrics']
+   maes = ['mae']
+   mses = ['mse']
+   rmses = ['rmse']
+   score_test = ['Accuracy (r2_score)']
+   # score_train = ['Accuracy (TRN)']
+   # mean_rmses = ['Mean(RMSE)_CrossValidation']
 
+   for model in arbitrarios:
+      names.append(str(model))
+      MAE = mean_absolute_error(y_test, model.predict(X_test))
+      maes.append(str(MAE))
+      MSE = mean_squared_error(y_test, model.predict(X_test))
+      mses.append(str(MSE))
+      RMSE = np.sqrt(mean_squared_error(y_test, model.predict(X_test)))
+      rmses.append(str(RMSE))
+      ACC =  r2_score(y_test, model.predict(X_test))
+      score_test.append(str(ACC))
+      # SCORE_TR = model.score(X_train, y_train)
+      # SCORE_TS = model.score(X_test, y_test)
+   x = PrettyTable()
+   x.field_names = names
+   x.add_row(maes)
+   x.add_row(mses)
+   x.add_row(rmses)
+   x.add_row(score_test)
+   # x.add_row(score_train)
+   # x.add_row(mean_rmses)
+
+   return x
