@@ -776,3 +776,17 @@ def carga_datos_nlp(train_path,test_path,encoding):
     for line in open(os.getcwd() + test_path, 'r', encoding=encoding):
     
         reviews_test.append(line.strip())
+        
+def create_dict_images(directory):
+
+   '''Funcion que crea diccionario con el directorio completo de la imagen y la imagen'''
+  
+    image_dict = {}
+   
+    for filename in os.listdir(directory):
+          full_address = directory+'/'+filename
+          # Read image and convert the BGR image to RGB
+          # save filename and image in dictionary 
+          images.update({filename: cv.imread(full_address, cv.COLOR_BGR2RGB)})
+
+    return(image_dict)
