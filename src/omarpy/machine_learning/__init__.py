@@ -1,5 +1,6 @@
 """El modulo :mod:omarpy.machine_learning incluye funciones que ayudan con el entrenamiento de modelos predictivos de machine learning. """
 
+<<<<<<< HEAD
 from .functions import (
 Mejor_PCA_DecissionTree_Regression,
 Mejor_PCA_RandomForest_Regression,
@@ -25,3 +26,6 @@ remove_stop_words,
 sweet_table,
 check_optimizadores)
 
+=======
+from .functions import *
+>>>>>>> ca4af9129d9e0c5c8e01f52d186a5e330c66ba7e

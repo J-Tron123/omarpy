@@ -3,6 +3,7 @@
 # -------------------------------------------------------------------------------
 import os
 import math as mt
+import seaborn as sns
 import numpy as np
 import pandas as pd
 from PIL import Image
@@ -11,6 +12,7 @@ from matplotlib import colors
 from itertools import cycle
 from matplotlib import pyplot
 import matplotlib.pyplot as plt
+import plotly.express as px
 import plotly.graph_objs as go
 from plotly.offline import iplot
 from sklearn.preprocessing import label_binarize
@@ -42,7 +44,7 @@ def graf_bar_horizon(eje_x, eje_y,  etiq_y, etiq_x, tittle, color = 'green',):
         etiq_x (str): etique del eje x
         tittle (str): el titulo del grafico
         color (str): el color que queremos que tengan las barras del grafico, si no se indica nada por default sera green
-       
+    
     Retorno:
         figura
 
@@ -65,13 +67,13 @@ def f1(x):
     Argumentos:
         X (tuple): debe de ser un range en el que se incluya el rango de los valores de X
         
-     Retorno:
+    Retorno:
         figura
         
     Autor: Dave
     '''
     return 2*(x**2) + 5*x - 2
- 
+
 
 # FUNCIÓN PARA GRÁFICO GENERAL DE EJE X E Y
 # -------------------------------------------------------------------------------
@@ -119,7 +121,6 @@ def plot_pairplot(dataset, title_y):
     """
     fig = px.box(dataset, y = title_y)
     return fig.show()
-   
     
 # FUNCION GRAFICO DE BARRAS APILADAS PARA TRES VALORES
 # -------------------------------------------------------------------------------
@@ -155,7 +156,7 @@ def stacked_bar_plot ( valores_x,data1,data2,data3,labels, ancho_barras, y_etiqu
     plt.grid (True, alpha=0.1)
     plt.legend()
     return plt.show()
-   
+
 
 # HISTOGRAMA & BOXPLOT
 # -------------------------------------------------------------------------------
@@ -241,10 +242,10 @@ def plot_bar_chart_with_numbers_y(param1, param2, param3, param4):
     """
 
     trace = go.Bar(x = param1[param2],
-               y = param1[param3],
-               marker = dict(color = 'rgba(255, 174, 255, 0.5)',
+                y = param1[param3],
+                marker = dict(color = 'rgba(255, 174, 255, 0.5)',
                             line = dict(color='rgb(0,0,0)', width = 1.5)),
-               text = param1[param3])
+                text = param1[param3])
     data = [trace]
     layout = go.Layout(barmode = "group", title = param4)
     fig = go.Figure(data = data, layout = layout)
@@ -263,7 +264,7 @@ def plot_boxplot(param1, param2):
 
     Retornos:
         Diagrama de caja y bigotes
-   
+
     Autor: Gretel
     """
     fig = px.box(param1, param2)
@@ -311,7 +312,7 @@ def data_report(df):
 
 def grafico(df,col1,col2,titulo_x,titulo_graf):
     '''Función para representar un gráfico de barras.
-       Argumentos:
+        Argumentos:
             df: Nombre del dataframe
             col1 (str): Nombre de la columna para agrupa
             col2 (str) : Nombre de la segunda columna por la que agrupar
@@ -346,14 +347,14 @@ def scat_log_visualize(figuresize=(10,10), xlim=(10,10), ylim=(10,10), xlabel="X
     '''Función que genera un gráfico de dispersión con escala logaritmica.
     
         Argumentos:
-             figuresizetuple (tuple): Tamaño de la figura (default = (10,10)).
-             xlim (tuple): Limites de eje X (default = (10,10)).
-             ylim (tuple): Limites de eje Y (default = (10,10)).
-             xlabel (str): Nombre de eje X(default = "X").
-             ylabel (str): Nombre de eje Y(default = "Y").
-             x (np.array): Valores en eje X.
-             y (np.array): Valores en eje Y.
-             
+            figuresizetuple (tuple): Tamaño de la figura (default = (10,10)).
+            xlim (tuple): Limites de eje X (default = (10,10)).
+            ylim (tuple): Limites de eje Y (default = (10,10)).
+            xlabel (str): Nombre de eje X(default = "X").
+            ylabel (str): Nombre de eje Y(default = "Y").
+            x (np.array): Valores en eje X.
+            y (np.array): Valores en eje Y.
+            
         Retorno
             Figura
     '''
@@ -371,7 +372,7 @@ def scat_log_visualize(figuresize=(10,10), xlim=(10,10), ylim=(10,10), xlabel="X
                     y,
                     s=100)
     return plt.show()
-   
+
 
 # MAPA DE CALOR DE CORRELACIÓN
 # -------------------------------------------------------------------------------
@@ -379,10 +380,9 @@ def scat_log_visualize(figuresize=(10,10), xlim=(10,10), ylim=(10,10), xlabel="X
 def sweet_heatmap(dataframe, figsize):
     """
     Trazar las correlaciones entre variables a través de una matriz codificada por colores.
-       
     Argumentos:
-      dataframe (df): (Ver Descripción)
-      figsize (tuple): Tupla con el tamaño con el que se quiere dibujar el diagrama (x,x).
+        dataframe (df): (Ver Descripción)
+        figsize (tuple): Tupla con el tamaño con el que se quiere dibujar el diagrama (x,x).
     
     Retorno:
         figura
@@ -411,10 +411,10 @@ def sweet_pie_1(values, labels, title):
     Un gráfico circular dividido en sectores que representan cada uno una proporción del todo.
     
     Argumentos:
-      values (list_of_int): Lista con los valores numericos que se quieren representar.
-      labels (list_of_str): Lista con los valores categoricos que se quieren representar.
-      title (str): Titulo del grafico
-      
+        values (list_of_int): Lista con los valores numericos que se quieren representar.
+        labels (list_of_str): Lista con los valores categoricos que se quieren representar.
+        title (str): Titulo del grafico
+
     Retorno:
         Figura
     
@@ -439,11 +439,11 @@ def sweet_pie_1(values, labels, title):
 def sweet_pie_2(values, labels, title):
     """
     Un gráfico circular dividido en sectores que representan cada uno una proporción del todo.
-      
+    
     Argumentos:
-      values (list_of_int): Lista con los valores numericos que se quieren representar.
-      labels (list_of_str): Lista con los valores categoricos que se quieren representar.
-      title (str): Titulo del grafico
+        values (list_of_int): Lista con los valores numericos que se quieren representar.
+        labels (list_of_str): Lista con los valores categoricos que se quieren representar.
+        title (str): Titulo del grafico
     
     Retorno:
         figura
@@ -498,8 +498,8 @@ def sweet_cloud(path, text):
     Las palabras suelen ser palabras sueltas y la importancia de cada una se muestra con el tamaño o el color de la fuente.
     
     Argumentos:
-      path (str): Se necesita especificar la ruta donde se encuentar laa imagen que queremos convertir.
-      text (str): Necesitamos de un texto '''Texto'''
+        path (str): Se necesita especificar la ruta donde se encuentar laa imagen que queremos convertir.
+        text (str): Necesitamos de un texto '''Texto'''
     
     Retorno:
         Figura

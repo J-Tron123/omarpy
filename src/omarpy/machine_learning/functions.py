@@ -388,6 +388,8 @@ def binary_class_metrics(y_train, y_test):
 
     f1_score = metrics.f1_score(y_train, y_test)
     print('F1 score:', f1_score)
+    
+    return accuracy, precision, recall, f1_score
 
 def precision_recall_AUC(y_test, y_pred):
     ''' 
@@ -504,6 +506,8 @@ def optunaXGBOOST(X,y,size,random):
         print("    {}: {}".format(key, value))                  
     fig = optuna.visualization.plot_param_importances(study)
     fig.show()
+    
+    return ()
 
 def omar():
     '''
@@ -512,6 +516,8 @@ def omar():
     urllib.request.urlretrieve("https://media-exp1.licdn.com/dms/image/C4E03AQH9NsUvxFQggA/profile-displayphoto-shrink_800_800/0/1575987701586?e=1656547200&v=beta&t=DM8kWl83h9U6nsRzt3_jqE3b13JjzRljAE6CWVkSNCk", "omar.png")     
     img = Image.open("omar.png")
     img.show()
+    
+    return()
 
 def scores(modelo, X_test, y_test, prediction):
     '''

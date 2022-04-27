@@ -2,6 +2,7 @@
 El modulo :mod:`omarpy.visualizacion` incluye funciones que ayudan con la visualización de datos. 
 """
 
+<<<<<<< HEAD
 from .functions import (
     graf_bar_horizon,
     move_spines,
@@ -23,3 +24,6 @@ from .functions import (
     sweet_cloud,
     plot_numerical_huetarget,
 )
+=======
+from .functions import *
+>>>>>>> ca4af9129d9e0c5c8e01f52d186a5e330c66ba7e
