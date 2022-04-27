@@ -406,7 +406,7 @@ def class_results(y_test, pred_y):
     '''
     conf_matrix = confusion_matrix(y_test, pred_y)
     plt.figure(figsize=(9,6))
-    sns.heatmap(conf_matrix, annot=True)
+    sns.heatmap(conf_matrix, annot=True,fmt="")
     plt.title('Confusion matrix')
     plt.ylabel('True class')
     plt.xlabel('Predicted class')
