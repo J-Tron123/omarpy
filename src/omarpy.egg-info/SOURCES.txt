@@ -1,0 +1,16 @@
+LICENSE.txt
+MANIFEST.in
+README.rst
+pyproject.toml
+setup.cfg
+setup.py
+src/limpieza/__init__.py
+src/limpieza/functions.py
+src/machine_learning/__init__.py
+src/machine_learning/functions.py
+src/omarpy.egg-info/PKG-INFO
+src/omarpy.egg-info/SOURCES.txt
+src/omarpy.egg-info/dependency_links.txt
+src/omarpy.egg-info/top_level.txt
+src/visualizacion/__init__.py
+src/visualizacion/functions.py
