@@ -680,22 +680,6 @@ def metodo_std(data):
     # Devuelve los límites superior e inferior
     return [inferior_3std, superior_3std]
 
-def predecir(x, model):
-    '''Función para importar un modelo de ML y realizar una predicción.
-    Argumentos:
-        x (pandas.DataFrame | np.array) Datos para realizar la predicción.
-        modelo: modelo que se quiere importar
-    Retornos:
-        str: Predicción redondeada
-    '''
-    with open(model) as archivo_entrada:
-        model_1 = pickle.load(archivo_entrada)
-
-    model_1
-    prediction = model_1.predict(x)
-
-    return str(prediction[0].round(2))
-
 def DF_Feature_importance(modelo, X):
     '''Función para obtener un data frame con las feature importance de un determinado modelo.
     Argumentos:
@@ -782,11 +766,11 @@ def create_dict_images(directory):
    '''Funcion que crea diccionario con el directorio completo de la imagen y la imagen'''
   
     image_dict = {}
-   
+
     for filename in os.listdir(directory):
-          full_address = directory+'/'+filename
-          # Read image and convert the BGR image to RGB
-          # save filename and image in dictionary 
-          images.update({filename: cv.imread(full_address, cv.COLOR_BGR2RGB)})
+            full_address = directory+'/'+filename
+            # Read image and convert the BGR image to RGB
+            # save filename and image in dictionary 
+            image_dict.update({filename: cv2.imread(full_address, cv2.COLOR_BGR2RGB)})
 
     return(image_dict)
