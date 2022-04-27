@@ -1,3 +1,4 @@
+from h11 import Data
 import pandas as pd 
 import numpy as np
 import regex as re  
@@ -11,7 +12,8 @@ import bs4 as bs, requests
 
 
 def drop_missings(df, axis, limit=""):
-    """Función que elimina los valores nulos de un DataFrame de la librería pandas
+    """
+    Función que elimina los valores nulos de un DataFrame de la librería pandas
 
         Argumentos:
             df (str): DataFrame al que se limpiaran los valores nulos.
@@ -43,7 +45,8 @@ def drop_missings(df, axis, limit=""):
     return df
 
 def remove_units (DataFrame, columns, units):
-    """Eliminar algunas extensiones, por ejemplo unidades de medida;
+    """
+    Eliminar algunas extensiones, por ejemplo unidades de medida;
     se puede incluir cuantas columnas sea necesario;
     La variable "units" sería, por ejemplo, "Kg", "mol/L" 
     
@@ -55,24 +58,27 @@ def remove_units (DataFrame, columns, units):
     """
     for col in columns:
         DataFrame[col] = DataFrame[col].str.strip(units)
+    return DataFrame
 
 def to_type(DataFrame, columns, type):
-    """Funcion para cambiar el tipo de la columna, 
+    """
+    Funcion para cambiar el tipo de la columna, 
     debe introducirse el nombre del Dataframe,
     el nombre de la columna que quiere cambiar y el tipo fin
 
-         Argumentos:
+        Argumentos:
         - DataFrame: Nombre del dataframe
         - columns (str): nombre de columna
         - type (str) : tipo al que queramos cambiar   
     
     """
     DataFrame[columns] = DataFrame[columns].astype(type)
+    return DataFrame
 
 def filter_df(DataFrame, columns, num):
     '''Función para crear un nuevo dataframe considerando lineas de una columna que tengan el mismo valor
 
-         Argumentos:
+        Argumentos:
         - DataFrame: Nombre del dataframe
         - columns (str): nombre de columna
         - num (int | float) : número que queramos mantener en la columna    
@@ -82,7 +88,7 @@ def filter_df(DataFrame, columns, num):
 
 
     '''      
-  
+
     df_filter = DataFrame[DataFrame[columns]==num]
         
     return df_filter
@@ -128,6 +134,7 @@ def inf_as_nan(df):
     """
 
     df.replace([np.inf, -np.inf], np.nan, inplace=True)
+    return df
 
 def regex_tex_all(raw,  pattern_b = "", pattern_a = "", special_characters = "", white_space = False):
     """De acuerdo al patrón dado, extraer todas las ocurrencias de un texto o lista de textos.
@@ -186,7 +193,7 @@ def regex_tex_first(raw,  pattern_b = "", pattern_a = "", special_characters = "
     Retornos:
         - list: Lista con la información encontrada.
     """
-   
+
     if type(raw) == str:
         raw = [raw]
         
@@ -343,6 +350,7 @@ def encoder (df, column):
     elif type(column) == str:
         encoder = LabelEncoder()
         df.loc[:,column] = encoder.fit_transform(df.loc[:,column])
+    return df
 
 def mean_Nan (df, column, parameter , new = False): 
         
@@ -372,6 +380,7 @@ def mean_Nan (df, column, parameter , new = False):
             df.loc[:,column] = df.loc[:,column].fillna(0)
         if parameter == 'fillna':
             df.loc[:,column].fillna(new, inplace = True)
+    return df
 
 def renombrar_columna(df,val_ini,val_fin):
     '''Función para renombrar columnas:
@@ -384,6 +393,7 @@ def renombrar_columna(df,val_ini,val_fin):
     '''
 
     df.rename(columns={val_ini:val_fin},inplace=True)
+    return df
 
 def limpiar(df,columna,palabra,nuevo_valor):
     '''Función Para sustituir una determinada palabra en una columna en concreto:
@@ -397,6 +407,7 @@ def limpiar(df,columna,palabra,nuevo_valor):
     '''
 
     df[columna] = df[columna].replace(palabra,nuevo_valor,regex=True)
+    return df
 
 def num_describe(data_in):
     """Retorna una mejor versión del describe
@@ -461,7 +472,7 @@ def circ_distance(value_1, value_2, low, high):
     angle = angle*(high-low)/(2*np.pi) + low
     
     return round(angle,3)
-  
+
 def mice_impute_nans(df):
     ''' Función que utiliza la Imputación Múltiple por Ecuaciones Encadenadas.
         MICE realiza regresiones múltiples en muestras aleatorias de los datos y agregados para imputar los valores NaN.
@@ -541,7 +552,7 @@ def crear_rentabilidades(Dataframe,Column_precio, nombre_nueva_columna, n):
     n: int.
 
     Return : Dataframe
-      """
+    """
 
     lista_precios_n_periodos_atras = []
 
@@ -552,7 +563,6 @@ def crear_rentabilidades(Dataframe,Column_precio, nombre_nueva_columna, n):
             lista_precios_n_periodos_atras.append(Dataframe[Column_precio][x+1])
     Dataframe['PRECIO ANTERIOR']=lista_precios_n_periodos_atras
     Dataframe[nombre_nueva_columna]=(Dataframe[Column_precio]-Dataframe['PRECIO ANTERIOR'])/Dataframe['PRECIO ANTERIOR']
-
 
     return Dataframe
 
@@ -567,7 +577,7 @@ def beautifull_scrap(url, headers):
         soup: HTML parseado de la librería bs4
 
     """
- 
+
     response = requests.get(url, headers=headers)
     return bs(response.content, "lxml")
 
@@ -576,7 +586,7 @@ def suma (dicc, info):
 
     Argumentos:
     - dicc (dicc): LA key del diccionario sera la nueva columna y los values las columnas que nos van a sumar
-   
+
     - info (dataframe): dataframe
 
     Retornos: 
@@ -585,7 +595,7 @@ def suma (dicc, info):
     '''
 
     for a in dicc.keys():
-       info[a] = info[dicc[a]].sum(axis=1)
+        info[a] = info[dicc[a]].sum(axis=1)
     return info
 
 def contar_imagenes(path: str, classes: list):
@@ -629,7 +639,7 @@ def create_dict_images(directory):
         Un diccionario de las ubicaciones de las imágenes.
     """
     image_dict = {}
-   
+
     for filename in os.listdir(directory):
         full_address = directory + '/' + filename
         # Read image and convert the BGR image to RGB
