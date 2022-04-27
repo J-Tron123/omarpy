@@ -1,235 +1,29 @@
-import os
-import shutil
-import cv2
+import pandas as pd 
 import numpy as np
-import pandas as pd
-from fancyimpute import IterativeImputer as MICE
-
-def num_describe(data_in):
-    """returns a better vesion of describe
-
-    Args:
-        data_in (pd.DataFrame): input pandas DataFrame
-
-    Returns:
-        pd.DataFrame: output dataframe
-    """
-    # get extra percentiles
-    data_out = data_in.describe([.01,.02,.98,.99]).T
-    data_out = data_out.drop(columns='count')
-    data_out.insert(0,'skewness', data_in.skew())
-    data_out.insert(0,'kurtosis', data_in.kurtosis())
-    data_out.insert(0,'sparsity', (data_in==0).sum()/len(data_in))
-    data_out.insert(0,'nulls', (data_in.isna()).sum()/len(data_in))
-    return data_out
-
-def read_images(path,size,filter=None):
-    '''
-    Función para cargar las imágenes en un array. 
-
-    Args:
-        path : str
-        size : tuple
-        filter : funct (Default = None)
-
-    Returns:
-        X : array
-    '''
-    X = []
-    for img in os.listdir(path):
-        image = cv2.imread(path+"/"+img)
-        if filter !=None:
-            image = filter(image)
-        smallimage = cv2.resize(image, size)
-        X.append(smallimage)
-    return np.array(X)
-
-def circ_distance(value_1, value_2, low, high):
-    """Returns distance bweteen two cyclical values
-
-    Args:
-        value_1 (int,float): first value
-        value_2 (int,float): second value
-        low (int,float): _description_
-        high (int,float): _description_
-
-    Returns:
-        float: distance between two values
-    """
-    # minmax scale to 0-2pi rad
-    value_1_rad = ((value_1-low)/(high-low))*(2*np.pi)
-    value_2_rad = ((value_2-low)/(high-low))*(2*np.pi)
-    # sin and cos for coordinates in the unit circle 
-    sin_value_1, cos_value_1 = np.sin(value_1_rad), np.cos(value_1_rad)
-    sin_value_2, cos_value_2 = np.sin(value_2_rad), np.cos(value_2_rad)
-    # dot product is the arccos of alpha
-    angle = np.arccos(np.dot([cos_value_1, sin_value_1],[cos_value_2, sin_value_2]))
-    # convert back to initial units
-    angle = angle*(high-low)/(2*np.pi) + low
-    # return distance
-    return round(angle,3)
-
-def inf_as_nan(df=pd.DataFrame):
-    """Remplaza valores infinitos de un DataFrame por NaN para poder operar con ellos.
-        
-        Argumentos:
-        df_column = Columna de dataframe. 
-
-        
-    """
-
-    df.replace([np.inf, -np.inf], np.nan, inplace=True)
-    
-def mice_impute_nans(df):
-    ''' función que utiliza la Imputación Múltiple por Ecuaciones Encadenadas
-        function which uses Multiple Imputation by Chained Equation
-    
-        argumentos:
-        dataFrame = datos sin valores que faltan 
-        arguments: 
-        dataframe = dataframe without missing values''' 
-
-    cols = df.columns
-    imputed_df = MICE( min_value= 0).fit_transform(df.values)
-    imputed_df = pd.DataFrame(imputed_df)
-    imputed_df.set_index(df.index, inplace=True)
-    imputed_df.columns= cols
-
-    return imputed_df
-
-def remove_units (DataFrame, columns, units):
-    """Eliminar algunas extensiones, por ejemplo unidades de medida;
-    se puede incluir cuantas columnas sea necesario;
-    La variable "units" sería, por ejemplo, "Kg", "mol/L" """
-    for col in columns:
-        DataFrame[col] = DataFrame[col].str.strip(units)
-
-def convertidor_español(Dataframe, column_name):
-    """ Conversión de números en formato string a float cuando estos tienen la puntuación 
-    no anglosajona.
-    Parámetros:
-        - Dataframe: dataframe
-        - Column_name: str"""
-
-    Dataframe[column_name] = Dataframe[column_name].str.replace(".","")
-    Dataframe[column_name] = Dataframe[column_name].str.replace(",",".").astype(float)
-
-    return Dataframe
-
-def convertidor_ingles(Dataframe, column_name):
-    """ Conversión de números en formato string a float cuando estos tienen la puntuación 
-    anglosajona.
-    Parámetros:
-        - Dataframe: dataframe
-        - Column_name: str"""
-
-    Dataframe[column_name] = Dataframe[column_name].str.replace(",","").astype(float)
-    return Dataframe
-
-def normalize(palabra):
-    """ Normalización de la palabras quitando símbolos de acentuación
-
-    Parámetros:
-        - palabra: str"""
-
-    replacements = (
-        ("á", "a"),
-        ("é", "e"),
-        ("í", "i"),
-        ("ó", "o"),
-        ("ú", "u"),
-    )
-    for a, b in replacements:
-        palabra = palabra.replace(a, b).replace(a.upper(), b.upper())
-    return palabra
-
-def crear_rentabilidades(Dataframe,Column_precio, nombre_nueva_columna, n): 
-
-    """ Esta función se emplea para calcular la rentabilidad de un precio n períodos atras.
-    Se crea una nueva columna.
-
-    Parametros: 
-        Dataframe: Df
-        Column_precio: str
-        Nombre_columna: Str
-        n: int.  """
-
-    lista_precios_n_periodos_atras = []
-
-    for x,i in enumerate (Dataframe[Column_precio]):
-        if x + n >= len(Dataframe[Column_precio]):
-            lista_precios_n_periodos_atras.append(np.nan)
-        else: 
-            lista_precios_n_periodos_atras.append(Dataframe[Column_precio][x+1])
-    Dataframe['PRECIO ANTERIOR']=lista_precios_n_periodos_atras
-    Dataframe[nombre_nueva_columna]=(Dataframe[Column_precio]-Dataframe['PRECIO ANTERIOR'])/Dataframe['PRECIO ANTERIOR']
-
-    return Dataframe
-
+import regex as re  
+from sklearn.model_selection import train_test_split
+import string
 from sklearn.preprocessing import LabelEncoder
-import pandas as pd
-import numpy as np
+import os
+import cv2
+from fancyimpute import IterativeImputer as MICE
+import bs4 as bs, requests
 
-#En alguna ocasión me ha sido favorable agrupar por porcentaje.
-
-def columnascat(df,nombrecolumntarget,split=" "):                                  #Función para tratar variables categoricas en problemas de clasificación binaria. Necesita el nombre de la columna target entrecomillada y viene por default que el split se haga con un espacio (split=" ").
-    le=LabelEncoder()
-    for i in df.columns:                                                           #Recorremos las columnas en busca de variables categoricas
-        if df[i].dtype==("object" or str):
-            print(i)
-            if (len(set(df[i]))<=(len(df)/20)):                                    #Miramos si hay, por lo menos,5 variables diferentes por cada 100 registros 
-                df[i]=le.fit_transform(df[i])                                      #Si los hay, hacemos un label encoder
-                for q in set(df[i]):                                               #Recorremos las diferentes variables 
-                    x=df[df[i]==q]
-                    porcentaje= ((len(x[x[nombrecolumntarget]==1]))*100)/(len(x))  #Se relaciona la variable con el target y se saca el porcentaje de probabilidad
-                    mask=(df[i]==q)
-                    df.loc[mask,i]=porcentaje                                      #Se aplica una mascara para cambiar cada variable por su porcentaje de probabilidad
-            
-            else:
-                try:
-                    data=df[i].str.split(split)                                     #Si no tenemos minimo 5 variables por cada 100 registros, intentamos dividir las diferentes variables. Util cuando son marcas de coche, procesadores,etc.
-                    df["New"]=data[0]
-
-                    if (len(set(df["New"]))<=(len(df)/20)):                         #Miramos ahora si tenemos 5 variables por cada 100 registros. Si es asi, repetimos el proceso de transformación y agrupación por porcentaje         
-                        df[i]=le.fit_transform(df[i])
-                        for q in set(df[i]):
-                            x=df[df[i]==q]
-                            porcentaje= ((len(x[x[nombrecolumntarget]==1]))*100)/(len(x))
-                            mask=(df[i]==q)
-                            df.loc[mask,i]=porcentaje
-                except:
-                    print("No se puede dividir")
-        else:
-            print("No es una variable categorica")
-
-def beautifull_scrap(url, headers):
-    """Función que obtiene la información de una página web mediante web scrapping
-
-    Argumentos:
-        url (str): Dirección URL de la web que se quiere atacar.
-        headers (dict): Diccionario con la cabecera que requiere la consulta a la web.
-
-    Retornos:
-        soup: HTML parseado de la librería bs4
-    """
-    import bs4 as bs, requests
-
-    response = requests.get(url, headers=headers)
-    return bs(response.content, "lxml")
 
 def drop_missings(df, axis, limit=""):
     """Función que elimina los valores nulos de un DataFrame de la librería pandas
 
-    Argumentos:
-        df (str): DataFrame al que se limpiaran los valores nulos.
-        axis (dict): Eje de donde se toma el criterio de eliminar dichos valores nulos, 
-        si es 0 eliminara las filas con valores nulos, si es 1 eliminara las columnas con una 
-        suma de valores nulos superior al límite.
-        limit (int): Limite de valores nulos que se pueden tolerar para no eliminar una columna, por defecto es
-        el 25% de la cantidad de registros que tenga el DataFrame
+        Argumentos:
+            df (str): DataFrame al que se limpiaran los valores nulos.
+            axis (dict): Eje de donde se toma el criterio de eliminar dichos valores nulos, 
+            si es 0 eliminara las filas con valores nulos, si es 1 eliminara las columnas con una 
+            suma de valores nulos superior al límite.
+            limit (int): Limite de valores nulos que se pueden tolerar para no eliminar una columna, por defecto es
+            el 25% de la cantidad de registros que tenga el DataFrame
 
-    Retornos:
-        df: DataFrame
+        Retornos:
+            df: DataFrame
+
     """
     if axis == 1:
 
@@ -248,58 +42,559 @@ def drop_missings(df, axis, limit=""):
 
     return df
 
-def file_sorter(path: str):
+def remove_units (DataFrame, columns, units):
+    """Eliminar algunas extensiones, por ejemplo unidades de medida;
+    se puede incluir cuantas columnas sea necesario;
+    La variable "units" sería, por ejemplo, "Kg", "mol/L" 
+    
+        Argumentos:
+        - DataFrame: Nombre del dataframe
+        - columns (str): nombre de columna
+        - units (str) : string que queramos eliminar
+    
     """
-    A function to sort the files in a folder
-    into their respective categories.
+    for col in columns:
+        DataFrame[col] = DataFrame[col].str.strip(units)
+
+def to_type(DataFrame, columns, type):
+    """Funcion para cambiar el tipo de la columna, 
+    debe introducirse el nombre del Dataframe,
+    el nombre de la columna que quiere cambiar y el tipo fin
+
+         Argumentos:
+        - DataFrame: Nombre del dataframe
+        - columns (str): nombre de columna
+        - type (str) : tipo al que queramos cambiar   
+    
+    """
+    DataFrame[columns] = DataFrame[columns].astype(type)
+
+def filter_df(DataFrame, columns, num):
+    '''Función para crear un nuevo dataframe considerando lineas de una columna que tengan el mismo valor
+
+         Argumentos:
+        - DataFrame: Nombre del dataframe
+        - columns (str): nombre de columna
+        - num (int | float) : número que queramos mantener en la columna    
+
+        Return:
+        -Df con la mascara
+
+
+    '''      
+  
+    df_filter = DataFrame[DataFrame[columns]==num]
+        
+    return df_filter
+
+def col_to_float(df_column):
+    """Retorna una columna de dataframe pandas con sus valores como float si esta compuesto por números y contiene
+    carácteres como ('.'/','/' ').
+        
+        Argumentos:
+        - df_column = Columna de dataframe. 
+
+        Return:
+        -Df modificado
+        
+    """
+
+    df_column = pd.Series([x.replace(".","") for x in df_column])
+    df_column = pd.Series([x.replace("-","") for x in df_column])
+    df_column = pd.Series([x.replace(" ","") for x in df_column]).astype(float)
+
+    return df_column
+
+def nan_as_nan(df_column_to_edit, nan_value):
+    """Retorna valores nulos diferentes a NaN (ej:999) como NaN (None)
+
+        Argumentos:
+        - df_column_to_edit (str) : Nombre de la columna
+        - nan_value (int  | float) : lo que queramos transformar a NaN
+
+        Return:
+        -Columna modificada
+
+    """
+    df_column_to_edit = np.where(df_column_to_edit == nan_value, None, df_column_to_edit)
+
+    return df_column_to_edit
+
+def inf_as_nan(df):
+    """Remplaza valores infinitos de un DataFrame por NaN para poder operar con ellos.
+        
+        Argumentos:
+        - df = Dataframe.         
+    """
+
+    df.replace([np.inf, -np.inf], np.nan, inplace=True)
+
+def regex_tex_all(raw,  pattern_b = "", pattern_a = "", special_characters = "", white_space = False):
+    """De acuerdo al patrón dado, extraer todas las ocurrencias de un texto o lista de textos.
+    
+    Argumentos:
+        - raw (str): Texto o lista de texto a extraer la información.
+        - pattern_b (str): Patrón antes de la palabra o cadena de palabras deseada,
+                        incluir espacios para ser más precisa la búsqueda; default = "".
+        - pattern_a (str): Patrón después de la palabra o cadena de palabras deseada, 
+                        incluir espacios para ser más precisa la búsqueda; default = "".
+        - special_characters (str): Agregar si la información a obtener tiene caracteres
+                        especiales como punto(.), coma(,), guión(-), entre otros; default = "".
+        - white_space (bool): True si la cadena de palabras tienen espacios, y False de lo contrario, default = False.
+        
+    Retornos:
+        - list: Lista con la información encontrada.
+    """ 
+    if type(raw) == str:
+        raw = [raw]
+        
+    list_words = []
+    for word in raw:
+        if white_space == True:
+            
+            if pattern_b == "":
+                re_string = re.findall(f"([\w\s{special_characters}]+){pattern_a}", word)
+            elif pattern_a== "":
+                re_string = re.findall(f"{pattern_b}([\w\s{special_characters}]+)", word)
+            else:
+                re_string = re.findall(f"{pattern_b}([\w\s{special_characters}]+){pattern_a}", word)
+                            
+        else:
+            if pattern_b == "":
+                re_string = re.findall(f"([\w{special_characters}]+){pattern_a}", word)
+            elif pattern_a== "":
+                re_string = re.findall(f"{pattern_b}([\w{special_characters}]+)", word)
+            else:
+                re_string = re.findall(f"{pattern_b}([\w{special_characters}]+){pattern_a}", word)        
+        list_words.append(re_string)
+    
+    return list_words
+
+def regex_tex_first(raw,  pattern_b = "", pattern_a = "", special_characters = "", white_space = False):
+    """De acuerdo al patrón dado, extraer la primera ocurrencia de un texto o lista de textos.
+    
+    Argumentos:
+        - raw (str): Texto o lista de texto a extraer la información.
+        - pattern_b (str): Patrón antes de la palabra o cadena de palabras deseada,
+                        incluir espacios para ser más precisa la búsqueda; default = "".
+        - pattern_a (str): Patrón después de la palabra o cadena de palabras deseada, 
+                        incluir espacios para ser más precisa la búsqueda; default = "".
+        - special_characters (str): Agregar si la información a obtener tiene caracteres
+                        especiales como punto(.), coma(,), guión(-), entre otros; default = "".
+        - white_space (bool): True si la cadena de palabras tienen espacios, y False de lo contrario, default = False.
+        
+    Retornos:
+        - list: Lista con la información encontrada.
+    """
+   
+    if type(raw) == str:
+        raw = [raw]
+        
+    list_words = []
+    for word in raw:
+        if white_space == True:
+            
+            if pattern_b == "":
+                re_string = re.findall(f"([\w\s{special_characters}]+){pattern_a}", word)
+            elif pattern_a== "":
+                re_string = re.findall(f"{pattern_b}([\w\s{special_characters}]+)", word)
+            else:
+                re_string = re.findall(f"{pattern_b}([\w\s{special_characters}]+){pattern_a}", word)
+                            
+        else:
+            if pattern_b == "":
+                re_string = re.findall(f"([\w{special_characters}]+){pattern_a}", word)
+            elif pattern_a== "":
+                re_string = re.findall(f"{pattern_b}([\w{special_characters}]+)", word)
+            else:
+                re_string = re.findall(f"{pattern_b}([\w{special_characters}]+){pattern_a}", word)
+        try:       
+            list_words.append(re_string[0])
+        except:
+            list_words.append(None)
+    
+    return list_words
+
+def drop_rows_by_index(df_raw, column, value_to_r, comparison_operator = "==", negation = False):
+    """Eliminar filas o registros de un DataFrame, de acuerdo a un filtro dado.
+    
+    Argumentos:
+        - df_raw (pandas.DataFrame): DataFrame a modificar.
+        - column (str): Columna donde se encuentra el valor o los valores a eliminar.
+        - value_to_r (str, int o float): Valor a eliminar, puede ser un valor tipo string, entero o float. 
+                                    Este debe ser igual al tipo de variable de la columna indicada.
+        - comparison_operator (str): Incluir el operador de comparación de los valores a eliminar, por ejemplo,
+                                    "!=" distinto a, ">" mayor a, "<" menor a, ">=" mayor o igual a, "<=" menor o igual a;
+                                    default = "==" igual.
+        - negation (bool): True agregar la virguilla(~), es decir negar el operador de comparación indicado, default = False.
+        
+    Retornos:
+        - pandas.DataFrame: DataFrame modificado.
+    """
+    df = df_raw.copy()
+    
+    if negation == False:
+        if comparison_operator == "==":
+            indexes = df[df[column] == value_to_r].index
+        elif comparison_operator == ">":
+            indexes = df[df[column] > value_to_r].index
+        elif comparison_operator == ">=":
+            indexes = df[df[column] >= value_to_r].index        
+        elif comparison_operator == "<":
+            indexes = df[df[column] < value_to_r].index        
+        elif comparison_operator == "<=":
+            indexes = df[df[column] <= value_to_r].index        
+        else:
+            indexes = df[df[column] != value_to_r].index
+    
+    else:
+        if comparison_operator == "==":
+            indexes = df[~(df[column] == value_to_r)].index
+        elif comparison_operator == ">":
+            indexes = df[~(df[column] > value_to_r)].index
+        elif comparison_operator == ">=":
+            indexes = df[~(df[column] >= value_to_r)].index        
+        elif comparison_operator == "<":
+            indexes = df[~(df[column] < value_to_r)].index        
+        elif comparison_operator == "<=":
+            indexes = df[~(df[column] <= value_to_r)].index        
+        else:
+            indexes = df[~(df[column] != value_to_r)].index
+        
+    df.drop(index=indexes, inplace=True)
+    return df   
+
+def get_Data(data, num_target):
+    
+    """
+    Esta función devuelve las divisiones de datos finales para entrenar y probar
+
+    Argumentos:
+        - data: Dataframe elegido
+        - num_target (int): target del dataframe
+
+    Retornos:
+        - Valor de retorno: Las divisiones de datos finales
+
+    """
+    y = data.iloc[:,num_target]
+    X = data.drop(data.iloc[:,num_target], axis=1)
+    return train_test_split(X, y, test_size = 0.33, shuffle = True, random_state = 45)
+
+def borrar_html(texto):
+    """
+    Función para borrar la forma html
+
+    Argumentos:
+        - texto (str): Primer parametro.
+
+    Retornos:
+        - El texto sin forma html
+
+    """
+    html = re.compile('<.*?>')
+    return html.sub('', texto)
+
+def borrar_signos_puntuación(texto):
+    
+    """
+    Función para borrar los signos de puntuación
+
+    Argumentos:
+        - texto (str): Primer parametro.
+
+    Retornos:
+        - El texto sin signos de puntuacion
+
+    """
+    tabla = str.maketrans('','',string.punctuation) 
+    return texto.translate(tabla)
+
+def borrar_url(texto):
+    
+    """
+    Función para borrar los signos de las url
+
+    Argumentos:
+        - texto (str): Primer parametro.
+
+    Retornos:
+        - El texto sin los signos de las url
+
+    """
+    url = re.compile('https?://\S+|www\.\S+')
+    return url.sub('',texto)
+
+def encoder (df, column):
+
+    """Función para hacer un labelEncoder.
+
+        Argumentos:
+
+        - df = Dataframe
+        - column (int | str) = número o nombre de columna
+
+    """
+    
+    if type(column) == int:
+        encoder = LabelEncoder()
+        df.iloc[:,column] = encoder.fit_transform(df.iloc[:,column])
+
+    elif type(column) == str:
+        encoder = LabelEncoder()
+        df.loc[:,column] = encoder.fit_transform(df.loc[:,column])
+
+def mean_Nan (df, column, parameter , new = False): 
+        
+    """Función para tratar los NaN.
+    En función del parametro que introduzcamos nos rellenara los NaN con la media, con ceros, o con el valor especificado.
+
+        Argumentos:
+        - df = Dataframe
+        - column (int/sring) = número o nombre de columna   
+        - parameter (str) = 'mean', 'ceros,'fillna' 
+        - new = valor nuevo que le quedamos dar a los Nan
+
+    """
+    
+    if type(column) == int:
+        if parameter == 'mean':
+            df.iloc[:,column].fillna(value=df.iloc[:,column].mean() , inplace=True) 
+        if parameter == 'ceros':
+            df.iloc[:,column] = df.iloc[:,column].fillna(0)
+        if parameter == 'fillna':
+            df.iloc[:,column].fillna(new, inplace = True)
+
+    elif type(column) == str:
+        if parameter == 'mean':
+            df.loc[:,column].fillna(value=df.loc[:,column].mean() , inplace=True) 
+        if parameter == 'ceros':
+            df.loc[:,column] = df.loc[:,column].fillna(0)
+        if parameter == 'fillna':
+            df.loc[:,column].fillna(new, inplace = True)
+
+def renombrar_columna(df,val_ini,val_fin):
+    '''Función para renombrar columnas:
+
+    Argumentos:
+    - df: Nombre del data frame
+    - val_ini (str): Nombre de la columna
+    - val_fin (str): Nombre nuevo que se le quiere dar a la columna
+
+    '''
+
+    df.rename(columns={val_ini:val_fin},inplace=True)
+
+def limpiar(df,columna,palabra,nuevo_valor):
+    '''Función Para sustituir una determinada palabra en una columna en concreto:
+    
+    Argumentos: 
+    - df: Nombre del datframe
+    - columna (str): Nombre de la columna
+    - palabra (str|float|int): Palabara que se quiere sustituir
+    - nuevo_valor (str|float|int): Nuevo valor que se le quiere dar a la palabra 
+
+    '''
+
+    df[columna] = df[columna].replace(palabra,nuevo_valor,regex=True)
+
+def num_describe(data_in):
+    """Retorna una mejor versión del describe
 
     Args:
-        path: The destination path were to sort files.
-    
+        data_in (pd.DataFrame): DataFrame
+
     Returns:
-        A print showing where the files are moved to.
+        pd.DataFrame: DataFrame con estadísticos
     """
     
-    files = [f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))]
-    ft_list=[] # ft (file type)
-    ft_folder_dict={}
+    data_out = data_in.describe([.01,.02,.98,.99]).T
+    data_out = data_out.drop(columns='count')
+    data_out.insert(0,'skewness', data_in.skew())
+    data_out.insert(0,'kurtosis', data_in.kurtosis())
+    data_out.insert(0,'sparsity', (data_in==0).sum()/len(data_in))
+    data_out.insert(0,'nulls', (data_in.isna()).sum()/len(data_in))
+    return data_out
+
+def read_images(path, size, color_space=None):
+    '''Función para cargar las imágenes en un array. 
+
+    Argumentos:
+        path (str): path de la carpeta donde se encuentra la imagen o las imágenes
+        size (tuple): (ancho de la imagen, altura de la imagen)
+        filter (cv2.color_space): cambiar espacio de color de la imagen, por ejemplo cv2.COLOR_RGB2BGR (Default = None)
+
+    Return:
+        X : array
+    '''
+
+    X = []
+    for img in os.listdir(path):
+        image = cv2.imread(path+"/"+img)
+        if color_space !=None:
+            image = cv2.cvtColor(image, color_space)
+        smallimage = cv2.resize(image, size)
+        X.append(smallimage)
+    return np.array(X)
+
+def circ_distance(value_1, value_2, low, high):
+    """Devuelve las distancias entre dos valores cíclicos.
+
+    Argumentos:
+        value_1 (int,float): primer valor
+        value_2 (int,float): segundo valor
+        low (int,float): descripcion
+        high (int,float): descripcion
+
+    Return:
+        float: distancia entre dos valores
+    """
     
-    # Creating folders for each kind el file
-    for file in files:
-        # Storing file stype extension
-        ft = file.split('.')[1]
-
-        if ft not in ft_list:
-            ft_list.append(ft)
-            new_folder_name = path + '/' + ft + '_folder'
-            ft_folder_dict[str(ft)] = str(new_folder_name)
-
-            if os.path.isdir(new_folder_name) == True:  # Folder exists
-                continue
-            
-            else:
-                os.mkdir(new_folder_name)
+    value_1_rad = ((value_1-low)/(high-low))*(2*np.pi)
+    value_2_rad = ((value_2-low)/(high-low))*(2*np.pi)
     
-    # Moving files to respectively folder
-    for file in files:
-        src_path = path + '/' + file
-        ft = file.split('.')[1]
+    sin_value_1, cos_value_1 = np.sin(value_1_rad), np.cos(value_1_rad)
+    sin_value_2, cos_value_2 = np.sin(value_2_rad), np.cos(value_2_rad)
+    
+    angle = np.arccos(np.dot([cos_value_1, sin_value_1],[cos_value_2, sin_value_2]))
+    
+    angle = angle*(high-low)/(2*np.pi) + low
+    
+    return round(angle,3)
+  
+def mice_impute_nans(df):
+    ''' Función que utiliza la Imputación Múltiple por Ecuaciones Encadenadas.
+        MICE realiza regresiones múltiples en muestras aleatorias de los datos y agregados para imputar los valores NaN.
+    
+        Argumentos:
+        dataFrame = datos sin valores que faltan 
+        
+        Retornos:
+        pandas.DataFrame: DataFrame con los missing values imputados
+    ''' 
 
-        if ft in ft_folder_dict.keys():
-            dest_path = ft_folder_dict[str(ft)]
-            shutil.move(src_path, dest_path)
-            
-    print(src_path + ('\033[92m' + ' >>> ' + '\033[0m') + dest_path)
+    cols = df.columns
+    imputed_df = MICE( min_value= 0).fit_transform(df.values)
+    imputed_df = pd.DataFrame(imputed_df)
+    imputed_df.set_index(df.index, inplace=True)
+    imputed_df.columns= cols
+
+    return imputed_df
+
+def convertidor_español(Dataframe, column_name):
+    """ Conversión de números en formato string a float cuando estos tienen la puntuación 
+    no anglosajona.
+    Parámetros:
+        - Dataframe: dataframe
+        - Column_name (str): nombre de la columna
+    Return : Dataframe   
+        """
+
+    Dataframe[column_name] = Dataframe[column_name].str.replace(".","")
+    Dataframe[column_name] = Dataframe[column_name].str.replace(",",".").astype(float)
+
+    return Dataframe
+
+def convertidor_ingles(Dataframe, column_name):
+    """ Conversión de números en formato string a float cuando estos tienen la puntuación 
+    anglosajona.
+    Argumentos:
+        - Dataframe: dataframe
+        - Column_name(str): nombre de la columna
+
+    Return : Dataframe
+        """
+
+    Dataframe[column_name] = Dataframe[column_name].str.replace(",","").astype(float)
+    return Dataframe
+
+def normalize(palabra):
+    """ Normalización de la palabras quitando símbolos de acentuación
+
+    Argumentos:
+        - palabra ( str): palabra que quereamos cambiar
+        
+    Return : palabra    
+        """
+
+
+    replacements = (
+        ("á", "a"),
+        ("é", "e"),
+        ("í", "i"),
+        ("ó", "o"),
+        ("ú", "u"),
+    )
+    for a, b in replacements:
+        palabra = palabra.replace(a, b).replace(a.upper(), b.upper())
+    return palabra
+
+def crear_rentabilidades(Dataframe,Column_precio, nombre_nueva_columna, n): 
+
+    """ Esta función se emplea para calcular la rentabilidad de un precio n períodos atras.
+    Se crea una nueva columna.
+
+    Argumentos: 
+    Dataframe: Df
+    Column_precio: str
+    Nombre_columna: Str
+    n: int.
+
+    Return : Dataframe
+      """
+
+    lista_precios_n_periodos_atras = []
+
+    for x,i in enumerate (Dataframe[Column_precio]):
+        if x + n >= len(Dataframe[Column_precio]):
+            lista_precios_n_periodos_atras.append(np.nan)
+        else: 
+            lista_precios_n_periodos_atras.append(Dataframe[Column_precio][x+1])
+    Dataframe['PRECIO ANTERIOR']=lista_precios_n_periodos_atras
+    Dataframe[nombre_nueva_columna]=(Dataframe[Column_precio]-Dataframe['PRECIO ANTERIOR'])/Dataframe['PRECIO ANTERIOR']
+
+
+    return Dataframe
+
+def beautifull_scrap(url, headers):
+    """Función que obtiene la información de una página web mediante web scrapping.
+
+        Argumentos:
+        url (str): Dirección URL de la web que se quiere atacar.
+        headers (dict): Diccionario con la cabecera que requiere la consulta a la web.
+
+        Retornos:
+        soup: HTML parseado de la librería bs4
+
+    """
+ 
+    response = requests.get(url, headers=headers)
+    return bs(response.content, "lxml")
+
+def suma (dicc, info):
+    ''' Función para crear una nueva columna con la suma de los valores de columnas que le pases
+
+    Argumentos:
+    - dicc (dicc): LA key del diccionario sera la nueva columna y los values las columnas que nos van a sumar
+   
+    - info (dataframe): dataframe
+
+    Retornos: 
+
+    - Datarame con la columna con la ponderación
+    '''
+
+    for a in dicc.keys():
+       info[a] = info[dicc[a]].sum(axis=1)
+    return info
 
 def contar_imagenes(path: str, classes: list):
     '''
     Cuenta las imágenes de cada categoría que encuentra dentro del directorio indicado, el cual debe de contener 
     las imágenes clasificadas en directorios según su categoría. 
-
     Argumentos: 
         path: Directorio común.
         classes: Lista de categorías dentro de las cuales se clasifica cada imagen.
-
     Retorno:
         DataFrame donde cada columna corresponde a cada categoría, y el número de elementos
         por categoría.
