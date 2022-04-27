@@ -1,4 +1,4 @@
-"""El modulo :mod:omarpy.visualizacion incluye funciones que ayudan con la visualización de datos."""
+"""El modulo :mod:omarpy.limpieza incluye funciones que ayudan con la limpieza de datos."""
 
 import pandas as pd 
 import numpy as np
