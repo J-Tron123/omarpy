@@ -28,9 +28,7 @@ Por último, con este módulo se puede acceder a una gama de métedos que permit
 Uso
 ================================
 
-En los siguientes párrafos se explica como instalar y utilizar la librería :
-
--Para descargar el paquete deberás introducir el siguiente comando en la terminal
+En el siguiente párrafo se encuentra el comando que se debe introducir en la terminal para instalar la librería y sus requerimientos :
 
 .. code-block:: python
     
