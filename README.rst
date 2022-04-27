@@ -36,7 +36,7 @@ Limpieza de Datos
 *Data Cleaning*
 -----------------------------------
 
-Este apartado contiene una serie de más de 30 funcionalidades con la finalidad de poder hacer limpiezas de datos precisas y efectivas, además de hacer encodings automáticos, ordenar archivos por su extensión, atacar webs mediante scraping, etnre otras.
+Este apartado contiene una serie de más de 30 funcionalidades con la finalidad de poder hacer limpiezas de datos precisas y efectivas, además de hacer encodings automáticos, ordenar archivos por su extensión, atacar webs mediante scraping, entre otras.
 
 **Funciones incluidas** *(included functions)* : drop_missings, remove_units,  to_type,  filter_df, col_to_float,  nan_as_nan,  inf_as_nan, regex_tex_all, regex_tex_first, drop_rows_by_index, get_Data, borrar_html, borrar_signos_puntuación, borrar_url, encoder, mean_Nan, renombrar_column, limpiar, num_describe, read_images, circ_distanc, mice_impute_nans, convertidor_español,convertidor_ingles,normalize, crear_rentabilidades, beautifull_scrap, suma, contar_imagenes,create_dict_images, remover_vello, mask_fondo
 
