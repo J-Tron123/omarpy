@@ -11,15 +11,11 @@ from sklearn.model_selection import train_test_split
 import pickle
 import sys
 import os
-
 import pandas as pd
 import numpy as np
-
 import urllib.request
-
 from PIL import Image
 import cv2
-
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -27,6 +23,7 @@ import seaborn as sns
 import optuna
 import xgboost
 import re
+from nltk.text import stopwords
 
 
 def remover_vello(imagen: np.array):
@@ -375,52 +372,25 @@ def scaler(scaler: str, data: np.array):
     except ValueError:
         print('Choose one of the scalers listed or pass through a matrix of at least two dimension for data.')
     
-def run_model(X_train, X_test, y_train, y_test, model_name, params): # params = funcion Miguel
+def prediction(model, X_test, y_pred=None):
     ''' 
-    Esta función sirve para correr los diferentes modelos de machine learning.
+    Realizar predicciones del modelo de machine learning sobre la parte de test.
 
     Args:
-        X_train, X_test, y_train, y_test: división del dataset en train y test.
-        model_name: modelo que se quiere probar ***(ej. LogisticRegression, RandomForestClassifier, XGBoost...).***
-        params: (***funciones de Miguel***) (ej.: función X - para x, función Y, para y.)
-    
-    Return:
-        El modelo entrenado con los parámetros indicados en la llamada de la función.
-    '''
-    model = model_name(params)
-    model.fit(X_train, y_train)
-    return model
-
-def prediction(model, X_test):
-    ''' 
-    Función para relaizar las predicciones del modelo de machine learning sobre la parte de test.
-
-    Args:
-        model: indicar la variable correspondiente al modelo entrenado.
-        X_test: indicar la variable correspondiente a test sobre la que se van a realizar las predicciones.
-    
-    Return:
-       Un array con las predicciones realizadas.
-    '''
-    preds = model.predict(X_test).round(0)
-    return preds
-
-def c_mat(y_test, X_test, model):
-    ''' 
-    Generación de una matriz de confusión a partir de los resultados 
-    obtenidos de las predicciones realizadas sobre la parte de test.
-
-    Args:
-        y_test: variable que contiene la 'target' de la parte de test.
+        model: modelo entrenado.
         X_test: variable que contiene las 'features' de la parte de test.
+        y_test: variable que contiene la 'target' de la parte de test.
 
     Return:
-        La matriz de confusión en base a los argumentos introducidos.
+       preds: Un array con las predicciones realizadas.
     '''
-    from sklearn.metrics import confusion_matrix
-    
-    c_mat = confusion_matrix(y_test, model.predict(X_test).round(0))
-    return c_mat
+    try:
+        if type(y_pred)!=type(None):
+            print('Score:',model.score(X_test,y_pred))
+        preds = model.predict(X_test).round(0)
+        return preds
+    except:
+        print('Error en la predicción')
 
 def class_results(y_test, pred_y):
     ''' 
@@ -507,9 +477,14 @@ def XgBoost_X_y(X,y,size,random):
     '''
     Función para seleccionar nuestras variables X e y, tamaño del test y random state.
 
-    Args: X = Variable X, y = Variable target, size = tamaño del test, random = numero de random state.
-        
- 
+    Args: 
+        X : Variable X
+        y : Variable target
+        size : tamaño del test
+        random : numero de random state.
+    
+    Return:
+        Función objectiveXgboost
     '''
     X_train_ex, X_test_ex, y_train, y_test =  train_test_split(X, y, test_size = size, random_state = random)
 
@@ -517,9 +492,11 @@ def XgBoost_X_y(X,y,size,random):
         """
         Función que llama a la anterior ''XgBoost_X_y'' y elige diferentes parametros por optimización bayesania.
 
-        Args: trial = Las veces que se recorrera los parametros para que Optuna eliga el mejor, se le añadira un numero entero.
+        Args: 
+            trial : Las veces que se recorrera los parametros para que Optuna eliga el mejor, se le añadira un numero entero.
 
-        Return: Parametros y accuracy.
+        Return:
+            Accuracy.
         """
         scaler=StandardScaler()
         X_train=scaler.fit_transform(X_train_ex)
@@ -560,7 +537,11 @@ def optunaXGBOOST(X,y,size,random):
     '''
     Optimiza todos los parametros de las funciones anteriores.
 
-    Args: X = Variable X, y = Variable target, size = tamaño del test, random = numero de random state.
+    Args:
+        X : Variable X
+        y : Variable target
+        size : tamaño del test
+        random : numero de random state.
     '''
 
     objective=XgBoost_X_y(X,y,size,random)
@@ -588,10 +569,10 @@ def scores(modelo, X_test, y_test, prediction):
     Función para generar un dataframe con los resultados obtenidos.
     Hay que tener un modelo entrenado y el ".predict" hecho.
     Argumentos:
-        modelo Se trata del nombre del modelo entrenado
-        X_test porción de los datos divididos (variables independientes del modelo) para realizar el test
-        y_test (np.array) porción de los datos divididos (variable target, a predecir o dependiente) para realizar el test
-        prediction (np.array) predicciones calculadas con el modelo entrenado
+        modelo : Se trata del nombre del modelo entrenado
+        X_test : porción de los datos divididos (variables independientes del modelo) para realizar el test
+        y_test (np.array) : porción de los datos divididos (variable target, a predecir o dependiente) para realizar el test
+        prediction (np.array) : predicciones calculadas con el modelo entrenado
         
     Retornos:
         DataFrame: DataFrame con los resultados de las métricas MAE, MSE, RMSE y SCORE.
@@ -755,7 +736,6 @@ def remove_stop_words(text,lenguage):
 
     Return: Texto limpio.
     '''
-    from nltk.text import stopwords
     english_stop_words = stopwords.words(lenguage)
 
     removed_stop_words = []
