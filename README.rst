@@ -35,4 +35,4 @@ En los siguientes párrafos se explica como instalar y utilizar la librería :
 .. code-block:: 
     pip install omarpy
 
-
+Disfrutala!
