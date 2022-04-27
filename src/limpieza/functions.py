@@ -3,8 +3,7 @@ import shutil
 import cv2
 import numpy as np
 import pandas as pd
-
-
+from fancyimpute import IterativeImputer as MICE
 
 def num_describe(data_in):
     """returns a better vesion of describe
@@ -23,7 +22,6 @@ def num_describe(data_in):
     data_out.insert(0,'sparsity', (data_in==0).sum()/len(data_in))
     data_out.insert(0,'nulls', (data_in.isna()).sum()/len(data_in))
     return data_out
-
 
 def read_images(path,size,filter=None):
     '''
@@ -45,6 +43,7 @@ def read_images(path,size,filter=None):
         smallimage = cv2.resize(image, size)
         X.append(smallimage)
     return np.array(X)
+
 def circ_distance(value_1, value_2, low, high):
     """Returns distance bweteen two cyclical values
 
@@ -69,7 +68,6 @@ def circ_distance(value_1, value_2, low, high):
     angle = angle*(high-low)/(2*np.pi) + low
     # return distance
     return round(angle,3)
-
 
 def inf_as_nan(df=pd.DataFrame):
     """Remplaza valores infinitos de un DataFrame por NaN para poder operar con ellos.
@@ -99,15 +97,12 @@ def mice_impute_nans(df):
 
     return imputed_df
 
-
 def remove_units (DataFrame, columns, units):
     """Eliminar algunas extensiones, por ejemplo unidades de medida;
     se puede incluir cuantas columnas sea necesario;
     La variable "units" sería, por ejemplo, "Kg", "mol/L" """
     for col in columns:
         DataFrame[col] = DataFrame[col].str.strip(units)
- 
-
 
 def convertidor_español(Dataframe, column_name):
     """ Conversión de números en formato string a float cuando estos tienen la puntuación 
@@ -120,7 +115,6 @@ def convertidor_español(Dataframe, column_name):
     Dataframe[column_name] = Dataframe[column_name].str.replace(",",".").astype(float)
 
     return Dataframe
-
 
 def convertidor_ingles(Dataframe, column_name):
     """ Conversión de números en formato string a float cuando estos tienen la puntuación 
@@ -149,9 +143,6 @@ def normalize(palabra):
         palabra = palabra.replace(a, b).replace(a.upper(), b.upper())
     return palabra
 
-
-
-
 def crear_rentabilidades(Dataframe,Column_precio, nombre_nueva_columna, n): 
 
     """ Esta función se emplea para calcular la rentabilidad de un precio n períodos atras.
@@ -172,7 +163,6 @@ def crear_rentabilidades(Dataframe,Column_precio, nombre_nueva_columna, n):
             lista_precios_n_periodos_atras.append(Dataframe[Column_precio][x+1])
     Dataframe['PRECIO ANTERIOR']=lista_precios_n_periodos_atras
     Dataframe[nombre_nueva_columna]=(Dataframe[Column_precio]-Dataframe['PRECIO ANTERIOR'])/Dataframe['PRECIO ANTERIOR']
-
 
     return Dataframe
 
