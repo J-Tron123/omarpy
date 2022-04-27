@@ -13,5 +13,20 @@ setup(
     install_requires =[
         'pandas',
         'numpy',
-    ]
+        'regex',
+        'scikit-learn',
+        'opencv-python',
+        'fancyimpute',
+        'bs4',
+        'requests',
+        'xgboost',
+        'tensorflow',
+        'prettytable',
+        'Pillow',
+        'matplotlib',
+        'seaborn',
+        'optuna',
+        'nltk',
+        'plotly',
+        'wordcloud']
 )
