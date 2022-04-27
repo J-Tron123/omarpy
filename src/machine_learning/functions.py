@@ -704,10 +704,16 @@ def DF_Feature_importance(modelo, X):
     Retornos:
         pandas.DataFrame: DataFrame con las feature importance del modelo.
     '''
+    try:
+        X = pd.DataFrame(X)
+
+    except:
+        pass
+
     features_importances_model= pd.DataFrame(modelo.feature_importances_.round(3),
-                                            X.columns,
-                                            columns = ["Feature importance"]).sort_values("Feature importance", ascending=False)
-    
+    X.columns, 
+    columns = ["Feature importance"]).sort_values("Feature importance", ascending=False)
+
     return features_importances_model
 
 def preprocess_reviews(reviews):
