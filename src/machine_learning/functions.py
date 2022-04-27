@@ -8,6 +8,8 @@ import tensorflow as tf
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 
+from prettytable import PrettyTable
+
 import pickle
 import sys
 import os
@@ -775,4 +777,52 @@ def create_dict_images(directory):
         image_dict.update({filename: cv2.imread(full_address, cv2.COLOR_BGR2RGB)})
     return image_dict 
 
+def sweet_table(X_test, y_test, *arbitrarios):
+   '''
+    Nos proporciona una pequeña descripción de las principales métricas a utilizar par evaluar el rendimiento
+    de nuestro modelo de ML. Nota: los modelos pasados deben tener las mismas features.
+    Siempre y cuando se siga el siguiente proceso: 
+    1) X_train, X_test, y_train, y_test = train_test_split(X_scaled, y)
+    2) Con nuestro modelo definido (ejemplo):
+       model = LGBMRegressor()
+       model1 = LinearRegression()
+    3) Entrenado nuestro modelo:
+       model.fit(X_train, y_train)
+       model1.fit(X_train, y_train)
+    Argumentos:
+      X_test (np.array): (Ver Descripción)
+      y_test (np.array): (Ver Descripción)
+      *arbitrareos (str): Serán uno o varios algoritmos con los que se quiere entrenar y evaluar nuestro modelo de ML.
+   '''
+
+   names = ['Metrics']
+   maes = ['mae']
+   mses = ['mse']
+   rmses = ['rmse']
+   score_test = ['Accuracy (r2_score)']
+   # score_train = ['Accuracy (TRN)']
+   # mean_rmses = ['Mean(RMSE)_CrossValidation']
+
+   for model in arbitrarios:
+      names.append(str(model))
+      MAE = mean_absolute_error(y_test, model.predict(X_test))
+      maes.append(str(MAE))
+      MSE = mean_squared_error(y_test, model.predict(X_test))
+      mses.append(str(MSE))
+      RMSE = np.sqrt(mean_squared_error(y_test, model.predict(X_test)))
+      rmses.append(str(RMSE))
+      ACC =  r2_score(y_test, model.predict(X_test))
+      score_test.append(str(ACC))
+      # SCORE_TR = model.score(X_train, y_train)
+      # SCORE_TS = model.score(X_test, y_test)
+   x = PrettyTable()
+   x.field_names = names
+   x.add_row(maes)
+   x.add_row(mses)
+   x.add_row(rmses)
+   x.add_row(score_test)
+   # x.add_row(score_train)
+   # x.add_row(mean_rmses)
+
+   return x
 
