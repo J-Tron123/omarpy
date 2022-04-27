@@ -322,3 +322,72 @@ def contar_imagenes(path: str, classes: list):
 
     except:
         print('Usa el tipo de datos apropiados para esta función.')
+
+def create_dict_images(directory):
+    """
+    Funcion que crea diccionario con el directorio completo de la imagen y la imagen.
+
+    Args:
+        directory: El directorio.
+    
+    Returns:
+        Un diccionario de las ubicaciones de las imágenes.
+    """
+    image_dict = {}
+   
+    for filename in os.listdir(directory):
+        full_address = directory + '/' + filename
+        # Read image and convert the BGR image to RGB
+        # save filename and image in dictionary 
+        image_dict.update({filename: cv2.imread(full_address, cv2.COLOR_BGR2RGB)})
+
+    return image_dict 
+
+def remover_vello(imagen: np.array):
+    '''
+    Se aplica una máscara para eliminar el vello en la imagen. La función devuelve una `imagen` con las
+    mismas dimensiones que la original.
+    
+    Args:
+        imagen: Matríz con valores entre 0 y 255.
+
+    Returns:
+        new_img: La imagen (matríz) con los filtros aplicados.
+    '''
+    try:
+        #1. Convertir a escala de grises
+        img_grayScale = cv2.cvtColor(imagen, cv2.COLOR_BGR2GRAY)
+        # Kernel para el filtrado morfológico
+        kernel = cv2.getStructuringElement(1,(17,17))
+        # Filtrado BlackHat para encontrar los contornos del cabello
+        blackhat = cv2.morphologyEx(img_grayScale, cv2.MORPH_BLACKHAT, kernel)
+        # Intensificar los contornos del cabello en preparación para el algoritmo de pintura
+        _,mask = cv2.threshold(blackhat,12,255,cv2.THRESH_BINARY)
+        # Pintar la imagen original dependiendo de la máscara
+        new_img = cv2.inpaint(imagen,mask,1,cv2.INPAINT_TELEA)
+
+        return new_img
+    
+    except:
+        print(f'El formato {imagen} no es el adecuado. Revisa la descripción de la función.')
+
+def mask_fondo(imagen: np.array):
+    '''
+    Función para eliminar el fondo de la imagen.
+
+    Args:
+        imagen: Matríz con valores entre 0 y 255.
+
+    Returns:
+        new_img: La imagen (matríz) con los filtros aplicados.
+    '''
+    try:
+        gray_example = cv2.cvtColor(imagen, cv2.COLOR_BGR2GRAY)
+        _, mask = cv2.threshold(gray_example, 120, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
+        mask_inv = cv2.bitwise_not(mask) 
+        new_img = cv2.bitwise_and(imagen,imagen,mask = mask_inv)
+
+        return new_img
+
+    except:
+        print(f'El formato {imagen} no es el adecuado. Revisa la descripción de la función.')
