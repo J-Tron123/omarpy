@@ -549,7 +549,23 @@ sweet_pie([20,10,25,30], ["Ana","Juan","Diana","Catalina"], 'Prueba 2')
 '''Debemos tener en cuenta que las imagenes que utilicemos deben tener un fondo transparente'''
 
 
+# paco
+def plot_numerical_huetarget(data, feature):
+    """Plots the boxplot and histogram of a numerical feature for each label
 
+    Args:
+        data (pd.DataFrame): dataframe with the data
+        feature (str): name of the feature to plot
+    """
+    sns.set_style('whitegrid')
+    palette = sns.color_palette()
+    blue, green, red = palette[0], palette[2], palette[3]
+    fig, axes = plt.subplots (4,1, figsize = (12,12), sharex=True, gridspec_kw={"height_ratios": (.1, .4, .1, .4)})
+    sns.boxplot(x = data.query("target == 1")[feature], color = red, ax=axes[0])
+    sns.histplot(data.query("target == 1")[feature], color = red, ax=axes[1])
+    sns.boxplot(x = data.query("target == 0")[feature], color = green, ax = axes[2])
+    sns.histplot(data.query("target == 0")[feature], color = green, ax=axes[3])
+    plt.show()
 
 
 # Alfonso
