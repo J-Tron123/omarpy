@@ -18,6 +18,8 @@ La librería está diseñada para perfiles orientados a la ciencia de datos para
 
 *The Library is designed for people developing projects in the data science stream, to help speed up the writing of low code scripts*
 
+*********************
+
 Visualización de Datos
 -----------------------------------
 
@@ -39,6 +41,7 @@ Este apartado contiene una serie de más de 30 funcionalidades con la finalidad 
 **Funciones incluidas:** num_describe, read_images, circ_distances, inf_as_nan, mice_impute_nans, remove_units, convertidor_español, convertidor_ingles, normalize, crear_rentabilidades, columnascat, beautiful_scrap, drop_missings, file_sorter.
 
 Ingeniería de Machine Learning
+-----------------------------------
 
 *Machine Learning Engineering*
 -----------------------------------
