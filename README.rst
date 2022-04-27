@@ -5,14 +5,13 @@ Omarpy
 Librería Python desarrollada por los alumnos de la clase Febrero-2022 durante el bootcamp de data science en la escuela The Bridge | Digital Talent Accelerator
 
 *Python Library created by students at The Bridge | Digital Talent Accelerator, data science, February-2022 promotion*
+*********************
 
 Visión General
 -----------------------------------
 
 *General Overview*
 -----------------------------------
-
-*********************
 
 La librería está diseñada para perfiles orientados a la ciencia de datos para permitirles agilizar procesos y desarrollar programas y funcionalidades en formatos low code de manera más eficiente
 
