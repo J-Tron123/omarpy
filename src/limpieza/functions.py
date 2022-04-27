@@ -290,3 +290,35 @@ def file_sorter(path: str):
             shutil.move(src_path, dest_path)
             
     print(src_path + ('\033[92m' + ' >>> ' + '\033[0m') + dest_path)
+
+def contar_imagenes(path: str, classes: list):
+    '''
+    Cuenta las imágenes de cada categoría que encuentra dentro del directorio indicado, el cual debe de contener 
+    las imágenes clasificadas en directorios según su categoría. 
+
+    Argumentos: 
+        path: Directorio común.
+        classes: Lista de categorías dentro de las cuales se clasifica cada imagen.
+
+    Retorno:
+        DataFrame donde cada columna corresponde a cada categoría, y el número de elementos
+        por categoría.
+    '''
+    try:
+        if '\\' in path:
+            path = path.replace('\\', '/')
+        else:
+            pass
+
+        class_count = []
+        for i in classes:
+            class_count.append(len(os.listdir(path + '/' + i)))
+            
+        df = pd.DataFrame(columns = ["Class_Name", "No of Images"])
+        df['Class_Name'] = classes
+        df["No of Images"] = class_count
+    
+        return df
+
+    except:
+        print('Usa el tipo de datos apropiados para esta función.')
