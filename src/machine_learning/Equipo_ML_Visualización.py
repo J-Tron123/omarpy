@@ -20,19 +20,8 @@ from sklearn import metrics
 
 
 
-""" FUNCIÓN PARA CREAR UN SCATTERPLOT PARA ML (Dave) 
-
- 1). El primer argumento o (dataset) es el nombre de la variable del dataset
-2). Title_y es el string del Título de la gráfica, por ejemplo (Precio del Bitcoin en el 2018) """
-
-def scatterplot(dataset):  
-    return sns.scatterplot(y_test, predictions)
-
-
-
-
 """ PLOT CONFUSION MATRIX (Gretel) """
-
+# LUCY
 "crear una matriz de confusión del porcentaje de predicciones correctas e incorrectas hechos por un modelo de clasificación"
 # >> importaciones necesarias
 from numpy import np
@@ -45,32 +34,30 @@ def plot_normalized_confusion_matrix(targets_tested,targets_predicted):
 # >> ejemplo de llamada función
 plot_normalized_confusion_matrix(y_test,y_pred)
 
+# >> código
+def plot_normalized_confusion_matrix(param1,param2, figsize=(12,12)):
+    """Creación de una matriz de confusión: muestra los porcentajes de predicciones positivas y negativas correctas e incorrectas realizadas por un modelo de clasificación
+
+    Argumentos:
+        param1: nombre de la variable a predecir, conocida del conjunto de datos (a menuda mencionada como "y_test")
+        param2: nombre de la variable a predecir tal como ha salido de la fase de verificación del modelo, para poder compararla con los valores de param1 (a menudo mencionada como "y_pred")
+        figsize (tuple): tamaño de la figura
+    Retornos:
+        Matriz de confusión normalizada
+
+    """
+    plt.figure(figsize=figsize)
+    cf=confusion_matrix(param1,param2)
+    return sns.heatmap(cf/np.sum(cf), annot=True, fmt=".2%",cmap="Blues")
+
+# >> ejemplo de llamada función
+y_test = [10,6,2,6,8,13]
+y_pred = [10,5,2,6,9,14]
+plot_normalized_confusion_matrix(y_test,y_pred)
 
 
-""" FUNCIÓN DIFERENCIAS DE PÉRDIDAS DE TRAIN Y TEST (Gonzalo) """
-
-
-def plot_metrics(history, metric_name, title, ylim=5):
-    '''
-    ----------------------------------------------------------------------------------------------
-    Muestra la diferencia entre la función de pérdidas en la muestra de "train" y "validación"
-
-    Input: 
-    "history": modelo de entrada
-    "metric_name": la métrica que se quiere mostrar
-    "title": título para la gráfica
-    "y_lim": lo que queremos mostrar en el eje y
-    ----------------------------------------------------------------------------------------------
-    '''
-    plt.title(title)
-    plt.ylim(0,ylim)
-    plt.plot(history.history[metric_name],color='blue',label=metric_name)
-    plt.plot(history.history['val_' + metric_name],color='green',label='val_' + metric_name)
-    plt.legend()
-
-
-# ML Imágenes > mostrar imágenes de cada categoría
-
+'''ML Imágenes > mostrar imágenes de cada categoría'''
+# MARCOS
 def mostrar_imagen_de_cada_tipo(path, numero_aleatorio, categorias, nrows, ncols, figsize=(20,5)):
     '''Devuelve una figura con una imágen representativa de cada categoría
 
@@ -93,8 +80,6 @@ def mostrar_imagen_de_cada_tipo(path, numero_aleatorio, categorias, nrows, ncols
     plt.show()
 
     return fig
-
-
 
 
 # Imágenes > en ML carpeta de train de imágenes contar cuantas hay por categoría
@@ -123,10 +108,11 @@ def contar_imagenes(path, classes):
     return df
 
 
-# ML > función de pérdidas (gráfico de líneas)
-
+'''ML > función de pérdidas (gráfico de líneas)'''
+# DAVID
 def plot_metrics(history, metric_name, title=None, ylim=None):
-    '''Muestra la diferencia entre la función de pérdidas en la muestra de "train" y "validación"
+    '''
+    Muestra la diferencia entre la función de pérdidas en la muestra de "train" y "validación"
 
     Argumentos: 
     history: modelo de entrada
@@ -137,7 +123,6 @@ def plot_metrics(history, metric_name, title=None, ylim=None):
     Retorno:
     Figura
 
-    Autor: Gonzalo
     '''
     plt.figure(figsize=(12,12))
     plt.title(title)
@@ -226,33 +211,12 @@ import seaborn as sns
 from sklearn.metrics import confusion_matrix
 import matplotlib.pyplot as plt
 
-# >> código
-def plot_normalized_confusion_matrix(param1,param2, figsize=(12,12)):
-    """Creación de una matriz de confusión: muestra los porcentajes de predicciones positivas y negativas correctas e incorrectas realizadas por un modelo de clasificación
 
-    Argumentos:
-        param1: nombre de la variable a predecir, conocida del conjunto de datos (a menuda mencionada como "y_test")
-        param2: nombre de la variable a predecir tal como ha salido de la fase de verificación del modelo, para poder compararla con los valores de param1 (a menudo mencionada como "y_pred")
-        figsize (tuple): tamaño de la figura
-    Retornos:
-        Matriz de confusión normalizada
-
-    """
-    plt.figure(figsize=figsize)
-    cf=confusion_matrix(param1,param2)
-    return sns.heatmap(cf/np.sum(cf), annot=True, fmt=".2%",cmap="Blues")
-
-# >> ejemplo de llamada función
-y_test = [10,6,2,6,8,13]
-y_pred = [10,5,2,6,9,14]
-plot_normalized_confusion_matrix(y_test,y_pred)
 
 
 
 '''FUNCION COMPLIACION, ENTRENAMIENTO DE MODELOS DE DEEPLEARNIG PARA REGRESION Y CLASIFICACION Y RESUMEN CON GRAFICOS FUNCION LOSS Y EVOLUCION EPOCHS LAURA'''
-
-
-
+# HECTOR
 def check_optimizadores (modelo, optimizadores, epochs, loss, metrics, x_data, y_data, bath, callbks):
     
     
@@ -312,8 +276,8 @@ def check_optimizadores (modelo, optimizadores, epochs, loss, metrics, x_data, y
 
 
 
-# Alfonso
-# Report performance_PrettyTable
+'''Report performance_PrettyTable'''
+# MIGUEL
 def sweet_table(X_test, y_test, *arbitrarios):
    """
     Nos prporciona una pequeña descripción de las principales métricas a utilizar par evaluar el rendimiento
