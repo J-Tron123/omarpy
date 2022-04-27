@@ -51,5 +51,5 @@ DF_Feature_importance,
 preprocess_reviews,
 remove_stop_words,
 sweet_table,
-check_optimizadores,)
+check_optimizadores)
 
