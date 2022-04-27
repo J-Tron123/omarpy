@@ -566,3 +566,28 @@ def plot_2dline(param1, param2,param3,param4=None):
     fig = px.line(param1, x= param2, y= param3, title = param4)
     fig.update_xaxes(tickangle=45)
     return fig.show()
+
+# PALABRAS A COLOR
+# ----------------------------------------------------------------------------
+
+def top100plot(lista):
+    '''Función para pintar un worcloud de las 100 palabras mas repetidas,
+       pasando una lista o columna de dataframe como parametro de entrada.
+    Argumentos:
+      lista (lst): Lista de las 100 palabras que más aparecen.
+      
+    Retorno:
+      Figura
+      
+    Autor:
+      Carmelo
+    '''
+
+    mostcommon = FreqDist(lista).most_common(100)
+    wordcloud = WordCloud(width=1600, height=800, background_color='white').generate(str(mostcommon))
+    plt.figure(figsize=(10,10), facecolor='white')
+    plt.imshow(wordcloud, interpolation="bilinear")
+    plt.axis('off')
+    plt.title('Top 100 Words', fontsize=50)
+    plt.tight_layout(pad=0)
+    return plt.show()
