@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #####################
 Omarpy
 #####################
@@ -45,3 +46,5 @@ En el siguiente párrafo se encuentra el comando que se debe introducir en la te
 ================================
 
 Disfrutala!
+=======
+>>>>>>> develop_limpieza
