@@ -16,6 +16,9 @@ from plotly.offline import iplot
 from sklearn.preprocessing import label_binarize
 from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
 from sklearn.metrics import recall_score, accuracy_score, auc, roc_curve
+import plotly.io as pio
+pio.renderers
+pio.renderers.default = "notebook_connected"
 
 import warnings
 warnings.filterwarnings("ignore")
@@ -76,51 +79,31 @@ pyplot.plot(x, [f2(i) for i in x])
 # -------------------------------------------------------------------------------
 
 
-def move_spines(y):
-
-
-    """Esta funcion divide pone al eje y en el valor 
-    0 de x para dividir claramente los valores positivos y
+def move_spines(x, y):
+    """Esta funcion divide pone al eje y en el valor 0 de x para dividir claramente los valores positivos y
     negativos.
     
-    x = para crear el gráfico.
-    y = argumento de entrada para el valor que le queramos dar dentro de la gráfica.
-    Autor : Dave """
-
-    import matplotlib.pyplot as plt
-    import numpy as np
-    import math as mt
-
+    Argumentos:
+        x (int): valor del eje y
+        y (int): valor del eje x
+        
+    Retorno:
+        figura
+        
+    Autor : Dave 
+    """
     fix, ax = plt.subplots()
     for spine in ["left", "bottom"]:
         ax.spines[spine].set_position("zero")
-
     for spine in ["right", "top"]:
         ax.spines[spine].set_color("none")
-
-
-
-    y = 10
-    x = np.linspace(-2, 6, num=30)
-
-    y = 10
-    x = np.linspace(-2, 6, num=30)
-
-
     ax.grid()
     ax.plot(x,x + 3)
     plt.title(r"Grafico de $f(x)=\sqrt{x + 2}$")
     plt.ylabel('f(x)')
     plt.xlabel('x')
     plt.show()
-
     return ax
-# Ejemplo para llamar a la función:
-
-y = 8
-
-move_spines(y);
-
 
 # Pairplot
 # -------------------------------------------------------------------------------
@@ -249,18 +232,9 @@ def bar_hor(df, a, b, title=None, xlabels=None):
     return fig
 
 
+# GRÁFICA DE BARRAS
+# -------------------------------------------------------------------------------
 
-
-#1. PLOT BARS EN LOS CUALES SALEN LOS VALORES NUMÉRICOS DE CADA BARRA - (Gretel)
-# >> importaciones necesarias
-import pandas as pd
-import plotly.graph_objs as go
-from plotly.offline import iplot
-import plotly.io as pio
-pio.renderers
-pio.renderers.default = "notebook_connected"
-
-# >> código
 def plot_bar_chart_with_numbers_y(param1, param2, param3, param4):
     """Creación de bar chart para 2 variables numéricas
     
@@ -272,7 +246,8 @@ def plot_bar_chart_with_numbers_y(param1, param2, param3, param4):
 
     Retornos:
         Gráfico de barras que muestra el número de valores de la variable a predecir por cada valor de la variable escogida
-
+    
+    Autor: Gretel
     """
 
     trace = go.Bar(x = param1[param2],
@@ -285,22 +260,10 @@ def plot_bar_chart_with_numbers_y(param1, param2, param3, param4):
     fig = go.Figure(data = data, layout = layout)
     return iplot(fig)
 
-# >> ejemplo de llamada función
-number_accidents = [250,625,524,685,645]
-months = ["ene","feb","mar","abr","mayo"]
-dicc = {"month": months,"accidents/month": number_accidents}
-df = pd.DataFrame(dicc)
-plot_bar_chart_with_numbers_y(df, "month", "accidents/month", "numero_accidentes_al_mes")
 
-#*****************************************************************************************************************************
+# BOXPLOT
+# -------------------------------------------------------------------------------
 
-
-#2. PLOT BOXPLOT - (Gretel)
-
-# >> importaciones necesarias
-import plotly.express as px
-
-# >> código
 def plot_boxplot(param1, param2):
     """Creación de un diagrama de caja y bigotes para representar los distintos valores de una variable numérica
 
@@ -310,37 +273,30 @@ def plot_boxplot(param1, param2):
 
     Retornos:
         Diagrama de caja y bigotes
-
+   
+    Autor: Gretel
     """
 
     fig = px.box(param1, param2)
     return fig.show()
 
-# >> ejemplo de llamada función
-distrito = ["BCN","Jaen","Sevilla","Madrid","Jaca"]
-median_number_accidents = [5,6,8,8,9]
-dicc = {"distrito": distrito,"promedio_numero_accidentes": median_number_accidents}
-df = pd.DataFrame(dicc)
-plot_boxplot(df, "promedio_numero_accidentes")
 
-
-
-
-
+# DATA REPORT
+# -------------------------------------------------------------------------------
 
 def data_report(df):
     '''Función para crear un data frame con estadísticas rápidas del dataset.
         
         Argumentos:
-        - df = Dataframe
+            df = Dataframe
+            
         Retornos:
-        - DataFrame con estadísticas:
-        - Cols: Nombre de las columnas
-        - types: tipo de datos de cada columna
-        - percent_missing: Porcentaje de missing
-        - unicos: valores únicos
-        - percent_cardin: Porcentaje de cardinalidad
-        
+            DataFrame con estadísticas:
+            Cols: Nombre de las columnas
+            types: tipo de datos de cada columna
+            percent_missing: Porcentaje de missing
+            unicos: valores únicos
+            percent_cardin: Porcentaje de cardinalidad
     '''
     
     cols = pd.DataFrame(df.columns.values, columns=["COL_N"])
@@ -361,19 +317,20 @@ def data_report(df):
     return concatenado
 
 
-
+# GRÁFICO DE BARRAS
+# -------------------------------------------------------------------------------
 
 def grafico(df,col1,col2,titulo_x,titulo_graf):
     '''Función para representar un gráfico de barras.
-        Argumentos:
-        - df: Nombre del dataframe
-        - col1 (str): Nombre de la columna para agrupa
-        - col2 (str) : Nombre de la segunda columna por la que agrupar
-        - título_x (str): título para el eje de las x
-        - título_graf (str): título para el gráfico
+       Argumentos:
+            df: Nombre del dataframe
+            col1 (str): Nombre de la columna para agrupa
+            col2 (str) : Nombre de la segunda columna por la que agrupar
+            título_x (str): título para el eje de las x
+            título_graf (str): título para el gráfico
     
         Retornos:
-        - Gráfico de tipo barras
+            Gráfico de tipo barras
         
     '''
     graf = df.groupby(col1)[[col2]].count()
@@ -394,18 +351,23 @@ def grafico(df,col1,col2,titulo_x,titulo_graf):
     return iplot(fig)
 
 
+# GRÁFICO DE DISPERSIÓN
+# -------------------------------------------------------------------------------
 
 def scat_log_visualize(figuresize=(10,10), xlim=(10,10), ylim=(10,10), xlabel="X", ylabel="Y", x=np.array, y=np.array):
     '''Función que genera un gráfico de dispersión con escala logaritmica.
     
         Argumentos:
-        - figuresizetuple (tuple): Tamaño de la figura (default = (10,10)).
-        - xlim (tuple): Limites de eje X (default = (10,10)).
-        - ylim (tuple): Limites de eje Y (default = (10,10)).
-        - xlabel (str): Nombre de eje X(default = "X").
-        - ylabel (str): Nombre de eje Y(default = "Y").
-        - x (np.array): Valores en eje X.
-        - y (np.array): Valores en eje Y.
+             figuresizetuple (tuple): Tamaño de la figura (default = (10,10)).
+             xlim (tuple): Limites de eje X (default = (10,10)).
+             ylim (tuple): Limites de eje Y (default = (10,10)).
+             xlabel (str): Nombre de eje X(default = "X").
+             ylabel (str): Nombre de eje Y(default = "Y").
+             x (np.array): Valores en eje X.
+             y (np.array): Valores en eje Y.
+             
+        Retorno
+            Figura
     '''
 
     sns.set_style("whitegrid")
@@ -420,33 +382,21 @@ def scat_log_visualize(figuresize=(10,10), xlim=(10,10), ylim=(10,10), xlabel="X
     sns.scatterplot(x,
                     y,
                     s=100);
-
-
-
-def heatmap(data):
     
-    """ Realizar un heatmap del dataframe que quieras
-    Argumentos:
-        - data: Dataframe que elijas
-    """
-    plt.figure(figsize=(20,20))
-    correlacion = np.abs(data.corr())
-    sns.set_style("ticks")
-    sns.heatmap(correlacion, annot = True, cmap=plt.cm.Blues)
-    plt.show()
 
-
+# GENERACION DE SUBPLOTS
+# -------------------------------------------------------------------------------
 
 def graphs_sub(number_r, number_c):
     
     """Crear Subplots con el número de filas y columnas dadas.
     Argumentos:
-        - number_r (int): Número de filas o rows.
-        - number_c (int): Número de columnas o columns.       
+        number_r (int): Número de filas o rows.
+        number_c (int): Número de columnas o columns.       
         
     Retornos:
-        - fig: Subplots.
-        - axes: axis de los subplots
+        fig: Subplots.
+        axes: axis de los subplots
     """
     import matplotlib.pyplot as plt
     plt.rcParams.update({'font.size': 15})    
@@ -455,7 +405,8 @@ def graphs_sub(number_r, number_c):
     return fig, axes
 
 
-# Opción HeatMap
+# MAPA DE CALOR DE CORRELACIÓN
+# -------------------------------------------------------------------------------
 
 def sweet_heatmap(dataframe, figsize):
     """
@@ -464,6 +415,12 @@ def sweet_heatmap(dataframe, figsize):
     Argumentos:
       dataframe (df): (Ver Descripción)
       figsize (tuple): Tupla con el tamaño con el que se quiere dibujar el diagrama (x,x).
+    
+    Retorno:
+        figura
+    
+    Autor
+        Alfonso
     """
     # plot a heatmap with annotation
     plt.figure(figsize=figsize)
@@ -474,14 +431,14 @@ def sweet_heatmap(dataframe, figsize):
                 square=True,
                 linewidths=.1,
                 annot=True);
-    # plt.savefig('coorelation2019.png', dpi = 300, orientation = 'horizontal')
     return plt.show()
 
 
 
-# Alfonso
-# Pie Chart (1ª Opción)
-def sweet_pie(values, labels, title):
+# PIE CHART 1
+# -------------------------------------------------------------------------------
+
+def sweet_pie_1(values, labels, title):
     """
     Un gráfico circular dividido en sectores que representan cada uno una proporción del todo.
     
@@ -489,6 +446,11 @@ def sweet_pie(values, labels, title):
       values (list_of_int): Lista con los valores numericos que se quieren representar.
       labels (list_of_str): Lista con los valores categoricos que se quieren representar.
       title (str): Titulo del grafico
+      
+    Retorno:
+        Figura
+    
+    Autor: Alfonso
     """
     colors = sns.color_palette('pastel')
     explode =  [0] * len(values)
@@ -505,16 +467,10 @@ def sweet_pie(values, labels, title):
 
     return plt.show()
 
-x = [15, 25, 25, 30, 5, 49]
-labels = ['Very Likely', 'Likely', 'Unsure', 'Unlikely', 'Very Unlikely', 'For sure']
-sweet_pie(x, labels, 'Prueba')
 
-
-
-
-# Alfonso
-# Pie Chart (2ª Opción)
-def sweet_pie(values, labels, title):
+# PIE CHART 2
+# ----------------------------------------------------------------------------
+def sweet_pie_2(values, labels, title):
     """
     Un gráfico circular dividido en sectores que representan cada uno una proporción del todo.
       
@@ -522,6 +478,11 @@ def sweet_pie(values, labels, title):
       values (list_of_int): Lista con los valores numericos que se quieren representar.
       labels (list_of_str): Lista con los valores categoricos que se quieren representar.
       title (str): Titulo del grafico
+    
+    Retorno:
+        figura
+    
+    Autor: Alfonso
     """
     colors = sns.color_palette('pastel')
     explode =  [0] * (len(values)-1) + [0.1]
@@ -536,22 +497,20 @@ def sweet_pie(values, labels, title):
 
     ax.set_title(title, weight='bold')
     plt.axis("equal")
-
-
     return plt.show()
 
-sweet_pie([20,10,25,30], ["Ana","Juan","Diana","Catalina"], 'Prueba 2')
 
-'''Debemos tener en cuenta que las imagenes que utilicemos deben tener un fondo transparente'''
+# BOXPLOT & DENSITY PLOT BINARIA
+# ----------------------------------------------------------------------------
 
-
-# paco
 def plot_numerical_huetarget(data, feature):
     """Plots the boxplot and histogram of a numerical feature for each label
 
-    Args:
+    Argumentos:
         data (pd.DataFrame): dataframe with the data
         feature (str): name of the feature to plot
+    
+    Autor: Paco
     """
     sns.set_style('whitegrid')
     palette = sns.color_palette()
@@ -564,8 +523,9 @@ def plot_numerical_huetarget(data, feature):
     plt.show()
 
 
-# Alfonso
-# World Cloud (NOT FINISH)
+# WORDCLOUD
+# ----------------------------------------------------------------------------
+
 def sweet_cloud(path, text):
 
     """
@@ -575,6 +535,11 @@ def sweet_cloud(path, text):
     Argumentos:
       path (str): Se necesita especificar la ruta donde se encuentar laa imagen que queremos convertir.
       text (str): Necesitamos de un texto '''Texto'''
+    
+    Retorno:
+        Figura
+    
+    Autor: Alfonso
     """
     stopwords = set(STOPWORDS)
     # picture = Image.open(jfif_path).convert("RGBA")
@@ -592,26 +557,30 @@ def sweet_cloud(path, text):
     return plt.show()
 
 
-# Ejemplo para llamar a la función
+# PALABRAS A COLOR
+# ----------------------------------------------------------------------------
+def escribir_a_color(color, texto):
+    """ Esta función te devuelve un string al color que tú le especifiques. 
 
-text = ('''I had a great weekend. On Friday afternoon, I finished work at 5 PM. I went home and took a shower. Then I went to see a couple of my friends at a bar downtown. 
+    Argumentos: 
+        color: verde, rojo, amarillo
+        texto: str
+        
+    Retorno:
+        figura
+        
+    Autor: Lorenzo
+    """
+    OK = '\033[92m' #GREEN
+    WARNING = '\033[93m' #YELLOW
+    FAIL = '\033[91m' #RED
+    RESET = '\033[0m' #RESET COLOR
 
-We had a couple of beers and a nice talk. 
+    if color == 'verde':
+        resultado = OK + texto + RESET
+    elif color == 'rojo':
+        resultado = FAIL + texto + RESET
+    elif color == 'amarillo':
+        resultado = WARNING + texto + RESET
 
-Tom told us about his new job, and Jim told us about his new girlfriend. After a while, we went to a restaurant and had pizza. I went to bed late that night, but I was very happy.
-
-On Saturday morning I went running in the park. I ran 5 kilometers, and then came home.
-
-After that, I met my girlfriend for lunch. We went to a Thai restaurant near my house. I love Thai food!
-
-I spent the evening with my girlfriend, watching TV on the sofa.
-
-The next day, I got up and caught the train to my parents’ town. I usually go to see my parents on Sundays, at least twice a month.
-
-My mom usually makes a roast, and we go for a walk in the park or in the country after lunch.
-
-This weekend was a bit different, though. My parents took me out for a nice lunch, because it was my birthday. After lunch, we took a walk (as usual) and then I caught the train back to London.
-
-Now it’s Monday and I’m back at work, but I’ve got big plans for next weekend!''')
-
-sweet_cloud("gretel.png", text)
+    return resultado
