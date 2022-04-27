@@ -11,6 +11,8 @@ from matplotlib import cm
 from matplotlib import colors
 from plotly.offline import iplot
 import plotly.graph_objs as go
+import plotly.express as px
+import plotly.io as pio
 import warnings
 warnings.filterwarnings("ignore")
 from PIL import Image
@@ -36,4 +38,5 @@ from .visualizacion import (
     sweet_heatmap, 
     sweet_pie,
     sweet_cloud,
+    plot_numerical_huetarget,
 )
