@@ -6,9 +6,11 @@ Librería Python desarrollada por los alumnos de la clase Febrero-2022 durante e
 
 *Python Library created by students at The Bridge | Digital Talent Accelerator, data science, February-2022 promotion*
 
-*Visión General*
+Visión General
+-----------------------------------
 
 *General Overview*
+-----------------------------------
 
 *********************
 
@@ -17,6 +19,7 @@ La librería está diseñada para perfiles orientados a la ciencia de datos para
 *The Library is designed for people developing projects in the data science stream, to help speed up the writing of low code scripts*
 
 Visualización de Datos
+-----------------------------------
 
 *Data Visualization*
 -----------------------------------
@@ -26,6 +29,7 @@ Estas funcionalidades están diseñadas para desplegar gráficos y subplots de m
 **Funciones incluidas:** graf_bar_horizon, move_spines, plot_pairplot, stacked_bar_plot, y, h, num_plot, bar_hor, plot_bar_chart_with_numbers_y, plot_boxplot, data_report, grafico, scat_log_visualize, heatmap, graphs_sub, sweet_heatmap, sweet_pie, sweet_cloud, plot_numerical_huetarget.
 
 Limpieza de Datos
+-----------------------------------
 
 *Data Cleaning*
 -----------------------------------
@@ -39,7 +43,8 @@ Ingeniería de Machine Learning
 *Machine Learning Engineering*
 -----------------------------------
 
-Por último, con este módulo se puede acceder a una gama de métedos que permiten no solo automatizar el entrenamiento de modelos, si no también obtener sus mejores featuraes, optimizar imágenes para el entrenamiento de redes convolucionales u obtener todo tipo de métricas de predicciones
+Por último, con este módulo se puede acceder a una gama de métedos que permiten no solo automatizar el entrenamiento de modelos, si no también obtener sus mejores featuraes, optimizar imágenes para el entrenamiento de redes convolucionales u obtener todo tipo de métricas de predicciones.
+
 **Funciones incluidas:**
 
 Uso
