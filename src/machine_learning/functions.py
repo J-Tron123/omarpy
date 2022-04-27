@@ -456,8 +456,6 @@ def precision_recall_AUC(y_test, y_pred):
 
     return print('Precision:', precision,',', 'Recall:', recall,',', 'ROC AUC score:', auc)
 
-    return auc
-
 def load_model(model_path):
     '''
     Carga el modelo
