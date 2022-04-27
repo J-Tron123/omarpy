@@ -1,14 +1,12 @@
-#####################
-Omarpy
-#####################
+# Omarpy
 
 Librería Python desarrollada por los alumnos de la clase Febrero-2022 durante el bootcamp de data science en la escuela The Bridge | Digital Talent Accelerator
 
 *Python Library created by students at The Bridge | Digital Talent Accelerator, data science, February-2022 promotion*
 
-*********************
 
-Visión General
+
+## Visión General
 -----------------------------------
 
 *General Overview*
@@ -18,9 +16,9 @@ La librería está diseñada para perfiles orientados a la ciencia de datos para
 
 *The Library is designed for people developing projects in the data science stream, to help speed up the writing of low code scripts*
 
-*********************
 
-Visualización de Datos
+
+### Visualización de Datos
 -----------------------------------
 
 *Data Visualization*
@@ -30,7 +28,7 @@ Estas funcionalidades están diseñadas para desplegar gráficos y subplots de m
 
 **Funciones incluidas** *(included functions)* : graf_bar_horizon, f1, move_spines, plot_pairplot, stacked_bar_plot, num_plot, bar_hor, plot_bar_chart_with_numbers_y, plot_boxplot, data_report, grafico, scat_log_visualize, sweet_heatmap, sweet_pie_1, sweet_pie_2, sweet_cloud, plot_numerical_huetarget, escribir_a_color, plot_2dline, top100plot.
 
-Limpieza de Datos
+### Limpieza de Datos
 -----------------------------------
 
 *Data Cleaning*
@@ -40,7 +38,7 @@ Este apartado contiene una serie de más de 30 funcionalidades con la finalidad 
 
 **Funciones incluidas** *(included functions)* : drop_missings, remove_units,  to_type,  filter_df, col_to_float,  nan_as_nan,  inf_as_nan, regex_tex_all, regex_tex_first, drop_rows_by_index, get_Data, borrar_html, borrar_signos_puntuación, borrar_url, encoder, mean_Nan, renombrar_column, limpiar, num_describe, read_images, circ_distanc, mice_impute_nans, convertidor_español,convertidor_ingles,normalize, crear_rentabilidades, beautifull_scrap, suma, contar_imagenes,create_dict_images, remover_vello, mask_fondo
 
-Ingeniería de Machine Learning
+### Ingeniería de Machine Learning
 -----------------------------------
 
 *Machine Learning Engineering*

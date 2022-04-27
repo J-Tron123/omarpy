@@ -6,7 +6,8 @@ long_description = (this_directory / "README.md").read_text()
 setup(
     name="omarpy",
     version="0.0.5",
-    long_description = long_description
+    long_description = long_description,
+    long_description_content_type='text/markdown',
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
@@ -21,7 +22,7 @@ setup(
         'scikit-learn',
         'opencv-python',
         'fancyimpute',
-        'bs4',
+        'beautifulsoup4',
         'requests',
         'xgboost',
         'tensorflow',
