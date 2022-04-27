@@ -4,9 +4,11 @@ from sklearn.decomposition import PCA
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.ensemble import RandomForestRegressor
 from xgboost import XGBRegressor
+import xgboost
 import tensorflow as tf
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
+import optuna
 
 import pickle
 import sys
@@ -383,7 +385,8 @@ def scaler(scaler: str, data: np.array):
         print('Choose one of the scalers listed or pass through a matrix of at least two dimension for data.')
     
 def run_model(X_train, X_test, y_train, y_test, model_name, params): # params = funcion Miguel
-    ''' Esta función sirve para correr los diferentes modelos de machine learning.
+    '''
+    Esta función sirve para correr los diferentes modelos de machine learning.
 
     Args:
         X_train, X_test, y_train, y_test: división del dataset en train y test.
@@ -398,7 +401,8 @@ def run_model(X_train, X_test, y_train, y_test, model_name, params): # params = 
     return model
 
 def prediction(model, X_test):
-    ''' Función para relaizar las predicciones del modelo de machine learning sobre la parte de test.
+    '''
+    Función para relaizar las predicciones del modelo de machine learning sobre la parte de test.
 
     Args:
         model: indicar la variable correspondiente al modelo entrenado.
@@ -411,7 +415,8 @@ def prediction(model, X_test):
     return preds
 
 def c_mat(y_test, X_test, model):
-    ''' Generación de una matriz de confusión a partir de los resultados 
+    ''' 
+    Generación de una matriz de confusión a partir de los resultados 
     obtenidos de las predicciones realizadas sobre la parte de test.
 
     Args:
@@ -427,7 +432,8 @@ def c_mat(y_test, X_test, model):
     return c_mat
 
 def class_results(y_test, pred_y):
-    ''' Resultados obtenidos a partir de un modelo de classificación.
+    ''' 
+    Resultados obtenidos a partir de un modelo de classificación.
 
     Args:
         y_test: variable con la 'target' de test.
@@ -446,7 +452,8 @@ def class_results(y_test, pred_y):
     print (classification_report(y_test, pred_y))
 
 def binary_class_metrics(y_train, y_test):
-    ''' Resultado de las métricas de accuracy, precision, recall y
+    '''
+    Resultado de las métricas de accuracy, precision, recall y
     f1 score para modelos de clasificación binaria.
 
     Args:
@@ -472,7 +479,8 @@ def binary_class_metrics(y_train, y_test):
     print('F1 score:', f1_score)
 
 def precision_recall_AUC(y_train, y_test):
-    ''' Resultado de la métrica AUC a partir del modelo
+    ''' 
+    Resultado de la métrica AUC a partir del modelo
     entrenado.
 
     Args:
@@ -491,23 +499,20 @@ def precision_recall_AUC(y_train, y_test):
     return auc
 
 def load_model(model_path):
-    '''carga el modelo
-       loads model 
-        
-       argumentos: 
-       directorio de modelo = pesos del modelo 
-       arguments: 
-       model path = model weights '''
+    '''
+    carga el modelo
+    loads model 
+    
+    argumentos: 
+    directorio de modelo = pesos del modelo 
+    arguments: 
+    model path = model weights
+    '''
     
     model = tf.keras.models.load_model(model_path)
 
     return model
 
-
-import optuna
-from sklearn.model_selection import train_test_split
-import xgboost
-from sklearn.metrics import accuracy_score
 def XgBoost_X_y(X,y):
     X_train_ex, X_test_ex, y_train, y_test =  train_test_split(X, y, test_size = 0.20, random_state = 1)
     def objectiveXgboost(trial):
@@ -563,6 +568,7 @@ def optunaXGBOOST(X,y):                                         #Argumentos de e
         print("    {}: {}".format(key, value))                  #Se mostrarán los valores escogidos por optimización bayesiana mas adecuados para el problema 
     fig = optuna.visualization.plot_param_importances(study)
     fig.show()
+
 def omar():
     """
     This functions shows the 1% world IQ character.
@@ -570,9 +576,6 @@ def omar():
     urllib.request.urlretrieve("https://media-exp1.licdn.com/dms/image/C4E03AQH9NsUvxFQggA/profile-displayphoto-shrink_800_800/0/1575987701586?e=1656547200&v=beta&t=DM8kWl83h9U6nsRzt3_jqE3b13JjzRljAE6CWVkSNCk", "omar.png")     
     img = Image.open("omar.png")
     img.show()
-
-
-
 
 def scores(modelo, X_test, y_test, prediction):
     """Función para generar un dataframe con los resultados obtenidos.
@@ -596,8 +599,6 @@ def scores(modelo, X_test, y_test, prediction):
     resultados = pd.DataFrame(resultados, index=['MAE','MSE','RMSE', 'Score'])
     return resultados
 
-
-
 def similarity_index(df_col=np.array, cons=float, exp=0.8):
     '''Función que genera un valor de similitud estadístico a partir del indice de similitud de
     Bray_Curtis.
@@ -611,9 +612,8 @@ def similarity_index(df_col=np.array, cons=float, exp=0.8):
         pandas.Series: Valor de similitud estadístico.
     '''
     sim = df_col.apply(lambda x: (1 - abs((x - cons)/(x + cons)))**exp)
+
     return sim
-
-
 
 def step_axis(init_val=float, num_vals=float, steps=float):
     '''Función que generá un array de elementos separados por un valor constante que servirían como eje de gráfico.
@@ -626,11 +626,7 @@ def step_axis(init_val=float, num_vals=float, steps=float):
     Retornos:
         np.array: array de ejes
     '''
-
-    axis = init_val + np.arange(num_vals)*steps
-    return axis
-
-
+    return init_val + np.arange(num_vals)*steps
 
 def percentil(data, nivel):
     """Función para saber los percentiles del dataframe
@@ -641,14 +637,12 @@ def percentil(data, nivel):
 
     Retornos:
         list: Los limites superiores e inferiores
-
     """
     # Límites superior e inferior por percentiles
     superior = np.percentile(data, 100 - nivel)
     inferior = np.percentile(data, nivel)
     # Devuelve los límites superior e inferior
     return [inferior, superior]
-
 
 def metodo_iqr(data):
     """Función para saber los limites con el rango intercuantilico
@@ -658,7 +652,6 @@ def metodo_iqr(data):
 
     Retornos:
         list: Los limites superiores e inferiores
-
     """
     # Cualcular el IQR (Rango intercuantilico)
     perc_75 = np.percentile(data, 75)
@@ -678,7 +671,6 @@ def metodo_std(data):
 
     Retornos:
         list: Los limites superiores e inferiores
-
     """
     # Creación de tres desviaciones estándar fuera de los límites
     std = np.std(data)
@@ -686,9 +678,6 @@ def metodo_std(data):
     inferior_3std = np.mean(data) - 3 * std
     # Devuelve los límites superior e inferior
     return [inferior_3std, superior_3std]
-
-
-
 
 def predecir(x, model):
     '''Función para importar un modelo de ML y realizar una predicción.
@@ -700,11 +689,11 @@ def predecir(x, model):
     '''
     with open(model) as archivo_entrada:
         model_1 = pickle.load(archivo_entrada)
+
     model_1
     prediction = model_1.predict(x)
+
     return str(prediction[0].round(2))
-
-
 
 def DF_Feature_importance(modelo, X):
     '''Función para obtener un data frame con las feature importance de un determinado modelo.
@@ -715,6 +704,7 @@ def DF_Feature_importance(modelo, X):
         pandas.DataFrame: DataFrame con las feature importance del modelo.
     '''
     features_importances_model= pd.DataFrame(modelo.feature_importances_.round(3),
-                          X.columns, 
-                          columns = ["Feature importance"]).sort_values("Feature importance", ascending=False)
-    features_importances_model
+                                            X.columns,
+                                            columns = ["Feature importance"]).sort_values("Feature importance", ascending=False)
+    
+    return features_importances_model
