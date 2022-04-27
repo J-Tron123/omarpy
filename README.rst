@@ -32,7 +32,8 @@ En los siguientes párrafos se explica como instalar y utilizar la librería :
 
 -Para descargar el paquete deberás introducir el siguiente comando en la terminal
 
-.. code-block:: python 
+.. code-block:: python
+    
     pip install omarpy
 
 Disfrutala!
