@@ -17,7 +17,7 @@ Estas funcionalidades están diseñadas para desplegar gráficos y subplots de m
 Limpieza de Datos
 ================================
 
-
+Este apartado contiene una serie de más de 30 funcionalidades 
 
 Ingeniería de Machine Learning
 ================================
