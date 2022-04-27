@@ -5,7 +5,7 @@ long_description = (this_directory / "README.md").read_text()
 
 setup(
     name="omarpy",
-    version="0.0.7",
+    version="0.0.8",
     long_description = long_description,
     long_description_content_type='text/markdown',
     classifiers=[
@@ -33,5 +33,6 @@ setup(
         'optuna',
         'nltk',
         'plotly',
-        'wordcloud']
+        'wordcloud',
+        'dash']
 )
