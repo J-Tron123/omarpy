@@ -58,20 +58,20 @@ plot_normalized_confusion_matrix(y_test,y_pred)
 
 '''ML Imágenes > mostrar imágenes de cada categoría'''
 # MARCOS
-def mostrar_imagen_de_cada_tipo(path, numero_aleatorio, categorias, nrows, ncols, figsize=(20,5)):
-    '''Devuelve una figura con una imágen representativa de cada categoría
+def mostrar_imagen_de_cada_tipo(path: str, numero_aleatorio, categorias: list, nrows, ncols, figsize=(20,5)):
+    '''
+    Devuelve una figura con una imágen representativa de cada categoría
 
     Argumentos: 
-    path (str): directorio común donde se encuentran las imágenes de cada categoría
-    numero_aleatorio (int): número entero que muestre el índice de la imágen a mostrar
-    categorias (list): lista con las distintas categorías
+        path: directorio común donde se encuentran las imágenes de cada categoría
+                    numero_aleatorio (int): número entero que muestre el índice de la imágen a mostrar
+        categorias: lista con las distintas categorías
 
     Retornos:
-    Figura con una imágen representativa de cada categoría
-
-    Autor: Gonzalo
+        Figura con una imágen representativa de cada categoría
     '''
     fig, axes = plt.subplots(nrows=nrows, ncols=ncols, figsize=figsize)
+
     for i, ax in enumerate(axes.flatten()):
         # plotting all 4 images on the same figure
         image_path = os.listdir(path + '/' + categorias[i])[numero_aleatorio]
@@ -84,19 +84,18 @@ def mostrar_imagen_de_cada_tipo(path, numero_aleatorio, categorias, nrows, ncols
 
 # Imágenes > en ML carpeta de train de imágenes contar cuantas hay por categoría
 
-def contar_imagenes(path, classes):
-    '''Cuenta las imágenes de cada categoría que encuentra dentro del directorio indicado, el cual debe de contener 
+def contar_imagenes(path: str, classes: list):
+    '''
+    Cuenta las imágenes de cada categoría que encuentra dentro del directorio indicado, el cual debe de contener 
     las imágenes clasificadas en directorios según su categoría. 
 
     Argumentos: 
-    path (str): directorio común
-    classes (list): categorías dentro de las cuales se clasifica cada imagen.
+        path: directorio común
+        classes: categorías dentro de las cuales se clasifica cada imagen.
 
     Retorno:
-    df (pandas.DataFrame): DataFrame donde cada columna corresponde a cada categoría, y el número de elementos
-    por categoría
-
-    Autor: Gonzalo
+        DataFrame donde cada columna corresponde a cada categoría, y el número de elementos
+        por categoría
     '''
     class_count = []
     for i in classes:
@@ -105,6 +104,7 @@ def contar_imagenes(path, classes):
     df = pd.DataFrame(columns = ["Class_Name", "No of Images"])
     df['Class_Name'] = classes
     df["No of Images"] = class_count
+    
     return df
 
 
