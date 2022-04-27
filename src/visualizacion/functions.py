@@ -170,6 +170,10 @@ def y(o):
     return a
 
 def h(b):
+    '''Función para crear una gráfica líneal para darle diferentes argumentos en el np.arange para 
+    hacerlo de forma manual. 
+    
+    Autor: Dave'''
     l = []
     for i in b:
         l.append(int(y(i)))
@@ -180,23 +184,21 @@ def h(b):
     return l
    
 
-# VISUALIZACIÓN (GONZALO) 
-# Histograma & Boxplot
-
-
+# HISTOGRAMA & BOXPLOT
+# -------------------------------------------------------------------------------
 
 def num_plot(df, col, title=None, symb=None):
     '''Figura que muestra la distribución de una variable en un histograma y en un boxplot.
     Además, muestra la media, la moda y la mediana.
 
     Argumentos:
-    df (pandas.DataFrame): pandas DataFrame
-    col (str): columna del pandas DataFrame de la cual se quiere conseguir la distribución
-    title (str): título del gráfico
-    symb (str): unidades de medida en la que se expresa la variable
+        df (pandas.DataFrame): pandas DataFrame
+        col (str): columna del pandas DataFrame de la cual se quiere conseguir la distribución
+        title (str): título del gráfico
+        symb (str): unidades de medida en la que se expresa la variable
 
     Retorno:
-    figura
+        figura
 
     Autor: Gonzalo
     '''
@@ -215,23 +217,21 @@ def num_plot(df, col, title=None, symb=None):
     return fig
 
 
-
-# VISUALIZACIÓN (GONZALO)
-# Bar plot > horizontal, simple.
-
+# HORIZONTAL BAR PLOT
+# -------------------------------------------------------------------------------
 
 def bar_hor(df, a, b, title=None, xlabels=None):
     '''Función que nos permite comparar diferentes valores.        
 
     Argumentos: 
-    df (pandas.DataFrame) 
-    a: pd.DataFrame donde la columna ['a'] sea el nombre de las variables a comparar. Puede sere el índice del dataframe. En tal caso, indicar: df.index.
-    b (int / float): columna de pd.DataFrame - df['b'] - cuyos valores sean los valores de las variables a comparar.
-    title (str): título que se le desea poner al gráfico. Por defecto será None.
-    xlabels (str): descripción que se le quiere dar al eje X. Por defecto será None.
+        df (pandas.DataFrame) 
+        a: pd.DataFrame donde la columna ['a'] sea el nombre de las variables a comparar. Puede sere el índice del dataframe. En tal caso, indicar: df.index.
+        b (int / float): columna de pd.DataFrame - df['b'] - cuyos valores sean los valores de las variables a comparar.
+        title (str): título que se le desea poner al gráfico. Por defecto será None.
+        xlabels (str): descripción que se le quiere dar al eje X. Por defecto será None.
 
     Retornos:
-    Gráfico de barras horizontales
+        Figura
 
     Autor: Gonzalo
     '''
