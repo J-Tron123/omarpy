@@ -50,6 +50,8 @@ Por último, con este módulo se puede acceder a una gama de métedos que permit
 
 **Funciones incluidas:**
 
+================================
+
 Uso
 ================================
 
