@@ -11,22 +11,15 @@ from matplotlib import cm
 from matplotlib import colors
 from plotly.offline import iplot
 import plotly.graph_objs as go
-<<<<<<< HEAD
-=======
 import plotly.express as px
 import plotly.io as pio
->>>>>>> develop_visualizacion
 import warnings
 warnings.filterwarnings("ignore")
 from PIL import Image
 from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
 
 
-<<<<<<< HEAD
-from .visualizacion import (
-=======
 from .functions import (
->>>>>>> develop_visualizacion
     graf_bar_horizon,
     move_spines,
     plot_pairplot,
@@ -45,8 +38,5 @@ from .functions import (
     sweet_heatmap, 
     sweet_pie,
     sweet_cloud,
-<<<<<<< HEAD
-=======
     plot_numerical_huetarget,
->>>>>>> develop_visualizacion
 )
