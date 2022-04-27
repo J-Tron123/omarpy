@@ -33,7 +33,7 @@ from .functions import (
     grafico,
     scat_log_visualize,
     sweet_heatmap, 
-    sweet_pie,
+    sweet_pie_1,
     sweet_pie2,
     sweet_cloud,
     plot_numerical_huetarget,
