@@ -778,3 +778,59 @@ def create_dict_images(directory):
     return image_dict 
 
 
+def check_optimizadores (modelo, optimizadores, epochs, loss, metrics, x_data, y_data, bath, callbks):
+    
+    
+    ''' Funcion que compila y entrena un modelo con uno o varios optimizadores, a través de un bucle for y muestra dos graficos.
+    graf_df_result = df_results.plot.bar() muestra la funcion de perdida, tanto para train como para la parte de validacion.
+    graf_epoc muestra como han ido convergiendo el modelo con cada uno de los optimizadores, tanto para el train como
+    para la validadcion.   
+    
+    INPUT:
+    modelo (objeto keras.engine.): modelo con las capas ya definidas fuera de la funcion
+    optimizadores (lista): lista con el/los optimizadores que se vayan a entrenar
+    epochs (int): entero con el número de epocs
+    loss (str): funcion loss que se va a fijar
+    metrics (objeto keras.metrics): metrica que se va a utilizar para el entrenamiento
+    x_data (np.array): los datos de train para el entrenamiento
+    xy_data (np.array): los datos de la variable a predecir para el entrenamiento
+    bath (int): numero de paquetes o muestras para calcular el error.
+    callbaks (lista): lista con las callbacks que se van a quere utilizar en el modelo
+    
+   
+    
+    '''
+    
+    results = {}
+    history = {}
+
+    for optimizadores in optimizadores:
+    
+  
+    
+        modelo.compile (loss = loss, optimizer= optimizadores, metrics = metrics)
+        optimizer_key = str(type(optimizadores).__name__)
+        history[optimizer_key] = modelo.fit(x_data, y_data, batch_size = bath, epochs = int(epochs), validation_split = 0.2,callbacks= callbks)
+        results[optimizer_key] = {}
+        results[optimizer_key]['loss'] = history[optimizer_key].history['loss'][epochs -1]
+        results[optimizer_key]['val_loss'] = history[optimizer_key].history['val_loss'][epochs -1]
+        
+        df_results = pd.DataFrame(results)
+    graf_df_result = df_results.plot.bar()
+    plt.show()
+    
+    graf_epoc = plt.figure(figsize= (7,7))
+    plt.xlabel ('Epoch')
+    plt.ylabel('Loss')
+    
+    for optimizadores in history:
+        hist = pd.DataFrame(history[optimizadores].history)
+        
+        plt.plot(history[optimizadores].epoch, np.array(hist['loss']),
+                label = 'Train loss' + optimizadores)
+        plt.plot(history[optimizadores].epoch, np.array(hist['val_loss']),
+                label = 'Val loss' + optimizadores)
+    plt.legend()
+    plt.show()
+    
+    return graf_df_result, graf_epoc
