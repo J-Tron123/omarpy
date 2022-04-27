@@ -21,11 +21,10 @@ from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
 
 from .functions import (
     graf_bar_horizon,
+    f1,
     move_spines,
     plot_pairplot,
     stacked_bar_plot,
-    y,
-    h,
     num_plot,
     bar_hor,
     plot_bar_chart_with_numbers_y, 
@@ -37,6 +36,10 @@ from .functions import (
     graphs_sub,
     sweet_heatmap, 
     sweet_pie,
+    sweet_pie2,
     sweet_cloud,
     plot_numerical_huetarget,
+    escribir_a_color,
+    plot_2dline, 
+    top100plot
 )
