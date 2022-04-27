@@ -55,22 +55,41 @@ def graf_bar_horizon(eje_x, eje_y,  etiq_y, etiq_x, tittle, color = 'green',):
     return plt.show()
 
 
+""" FUNCIÓN GRÁFICA LINEAL DE EJE X Y EJE Y (Dave) """
+
+# Función cuadrática.
+def f1(x):
+    return 2*(x**2) + 5*x - 2
+# Función lineal.
+def f2(x):
+    return 4*x + 1
+# Valores del eje X que toma el gráfico.
+x = range(-5, 15)
+# Graficar ambas funciones.
+pyplot.plot(x, [f1(i) for i in x])
+pyplot.plot(x, [f2(i) for i in x])
+
+
+
 
 # FUNCIÓN PARA GRÁFICO GENERAL DE EJE X E Y
 # -------------------------------------------------------------------------------
 
-def move_spines():
+
+def move_spines(y):
 
 
-    """Esta funcion divide pone al eje y en el valor 0 de x para dividir claramente los valores positivos y
+    """Esta funcion divide pone al eje y en el valor 
+    0 de x para dividir claramente los valores positivos y
     negativos.
     
-    Argumentos: 
-    
-    Retorno:
-    
-    Autor: Dave
-    """
+    x = para crear el gráfico.
+    y = argumento de entrada para el valor que le queramos dar dentro de la gráfica.
+    Autor : Dave """
+
+    import matplotlib.pyplot as plt
+    import numpy as np
+    import math as mt
 
     fix, ax = plt.subplots()
     for spine in ["left", "bottom"]:
@@ -96,6 +115,11 @@ def move_spines():
     plt.show()
 
     return ax
+# Ejemplo para llamar a la función:
+
+y = 8
+
+move_spines(y);
 
 
 # Pairplot
