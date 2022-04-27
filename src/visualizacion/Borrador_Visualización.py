@@ -96,6 +96,8 @@ def scat_log_visualize(figuresize=(10,10), xlim=(10,10), ylim=(10,10), xlabel="X
     plt.axes(xscale="log", yscale="log")
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
+    plt.xlim(xlim)
+    plt.ylim(ylim)
     sns.color_palette("hls", 8)
     sns.scatterplot(x,
                     y,
