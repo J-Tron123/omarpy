@@ -58,12 +58,15 @@ def graf_bar_horizon(eje_x, eje_y,  etiq_y, etiq_x, tittle, color = 'green',):
     return plt.show()
 
 
-""" FUNCIÓN GRÁFICA LINEAL DE EJE X Y EJE Y (Dave) """
+# FUNCIÓN CUADRÁTICA
+# -------------------------------------------------------------------------------
 
-# Función cuadrática.
 def f1(x):
     return 2*(x**2) + 5*x - 2
-# Función lineal.
+
+
+# FUNCIÓN LINEAL
+# -------------------------------------------------------------------------------
 def f2(x):
     return 4*x + 1
 # Valores del eje X que toma el gráfico.
