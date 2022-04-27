@@ -237,10 +237,10 @@ def plot_bar_chart_with_numbers_y(param1, param2, param3, param4):
     """Creación de bar chart para 2 variables numéricas
     
     Argumentos:
-        param1: dataframe 
-        param2: nombre de la variable escogida
-        param3: nombre de la variable a predecir
-        param4: nobmre del gráfico
+        param1 (pandas dataframe): dataframe 
+        param2 (str): nombre de la variable escogida
+        param3 (str): nombre de la variable a predecir
+        param4 (str): nobmre del gráfico
 
     Retornos:
         Gráfico de barras que muestra el número de valores de la variable a predecir por cada valor de la variable escogida
@@ -266,8 +266,8 @@ def plot_boxplot(param1, param2):
     """Creación de un diagrama de caja y bigotes para representar los distintos valores de una variable numérica
 
     Argumentos:
-        param1: dataframe
-        param2: nombre de la variable cuya dispersión de valores se quiere pintar
+        param1 (pandas dataframe): datos
+        param2 (str): nombre de la variable cuya dispersión de valores se quiere pintar
 
     Retornos:
         Diagrama de caja y bigotes
@@ -286,7 +286,7 @@ def data_report(df):
     '''Función para crear un data frame con estadísticas rápidas del dataset.
         
         Argumentos:
-            df = Dataframe
+            df (pandas Dataframe): datos
             
         Retornos:
             DataFrame con estadísticas:
@@ -582,3 +582,24 @@ def escribir_a_color(color, texto):
         resultado = WARNING + texto + RESET
 
     return resultado
+
+
+# GRÁFICO DE LÍNEAS
+# ----------------------------------------------------------------------------
+
+def plot_2dline(param1, param2,param3,param4=None):
+    """Creación de un gráfico de línea de 2 dimensiones para representar alguna evolución en los valores numéricos de una variable
+    Argumentos:
+        param1 (pandas dataframe): datos
+        param2 (str): nombre de la variable temporal
+        param3 (str): nombre de la variable cuya evolución se quiere medir
+        param4 (str): nombre del grafico de linea
+
+    Retornos:
+        Figura
+    
+    Autor: Gretel
+    """
+    fig = px.line(param1, x= param2, y= param3, title = param4)
+    fig.update_xaxes(tickangle=45)
+    return fig.show()
