@@ -19,7 +19,7 @@ from PIL import Image
 from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
 
 
-from .visualizacion import (
+from .functions import (
     graf_bar_horizon,
     move_spines,
     plot_pairplot,
