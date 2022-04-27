@@ -153,32 +153,6 @@ def stacked_bar_plot ( valores_x,data1,data2,data3,labels, ancho_barras, y_etiqu
     plt.legend()
 
     return plt.show()
-
-
-# FUNCIÓN PARA CREAR UN PLOT 
-# -------------------------------------------------------------------------------
-
-def y(o): 
-    '''Función para crear una gráfica líneal para darle diferentes argumentos en el np.arange para 
-    hacerlo de forma manual. 
-    
-    Autor: Dave'''
-    a = np.sin(o / 2.) * np.exp(o / 4.) + 6. * np.exp(-o / 4.)
-    return a
-
-def h(b):
-    '''Función para crear una gráfica líneal para darle diferentes argumentos en el np.arange para 
-    hacerlo de forma manual. 
-    
-    Autor: Dave'''
-    l = []
-    for i in b:
-        l.append(int(y(i)))
-    rr = np.arange(-5, 15, 2)
-    plt.plot(rr, h(rr))
-    plt.show()
-    
-    return l
    
 
 # HISTOGRAMA & BOXPLOT
